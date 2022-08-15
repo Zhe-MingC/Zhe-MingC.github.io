@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://zhe-mingc.github.io/</id>
+    <title>LDancer</title>
+    <updated>2022-08-15T02:23:51.654Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://zhe-mingc.github.io/"/>
+    <link rel="self" href="https://zhe-mingc.github.io/atom.xml"/>
+    <subtitle>日拱一卒无有尽，功不唐捐终入海</subtitle>
+    <logo>https://zhe-mingc.github.io/images/avatar.png</logo>
+    <icon>https://zhe-mingc.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2022, LDancer</rights>
+</feed>
