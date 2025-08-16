@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>深入浅出DPDK笔记</title>
+      <link href="/2025/08/16/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BADPDK%E7%AC%94%E8%AE%B0/"/>
+      <url>/2025/08/16/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BADPDK%E7%AC%94%E8%AE%B0/</url>
+      
+        <content type="html"><![CDATA[<h1 id="认识DPDK"><a href="#认识DPDK" class="headerlink" title="认识DPDK"></a>认识DPDK</h1><h1 id="Cache和内存"><a href="#Cache和内存" class="headerlink" title="Cache和内存"></a>Cache和内存</h1>]]></content>
+      
+      
+      <categories>
+          
+          <category> 技术学习 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> DPDK </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>我的第一篇博客</title>
       <link href="/2025/08/16/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/"/>
       <url>/2025/08/16/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/</url>
