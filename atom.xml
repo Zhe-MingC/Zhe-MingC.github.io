@@ -21,7 +21,7 @@
     <category term="DPDK" scheme="https://zhe-mingc.github.io/tags/DPDK/"/>
     <id>https://zhe-mingc.github.io/2026/09/27/tgw-atc-2025-notes/</id>
     <link href="https://zhe-mingc.github.io/2026/09/27/tgw-atc-2025-notes/"/>
-    <published>2026-09-27T13:46:58.000Z</published>
+    <published>2026-09-24T12:35:00.000Z</published>
     <summary>从游戏和直播的网关需求出发，整理 TGW 的报文处理、在线状态迁移、故障恢复与定位机制，以及连接状态和业务恢复的边界。</summary>
     <title>TGW 论文阅读笔记：高性能转发、状态迁移与故障恢复</title>
     <updated>2026-09-27T13:46:58.000Z</updated>
