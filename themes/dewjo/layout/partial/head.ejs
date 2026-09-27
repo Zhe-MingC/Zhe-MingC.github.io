@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="<%= config.language %>">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <% if (theme.favicon){ %>
+    <link rel="icon" href="<%- url_for(theme.favicon) %>">
+  <% } %>
+  <% if(config.author){ %>
+      <meta name="author" content="<%- config.author %>">
+  <% } %>
+  <% if(config.subtitle){ %>
+      <meta name="subtitle" content="<%- config.subtitle %>">
+  <% } %>
+  <% if(config.description){ %>
+      <meta name="description" content="<%= config.description %>">
+  <% } %>
+  <% if(config.keywords){ %>
+      <meta name="keywords" content="<%= page.keywords %>,<%- config.keywords %>">
+  <% } %>
+  <% if (theme.rss){ %>
+    <link rel="alternate" href="<%= url_for(theme.rss) %> " title="<%= config.title %>" type="application/atom+xml">
+  <% } %>
+
+  <%
+  var title = page.title;
+  if (is_archive()){
+      title = __('archive');
+
+      if (is_month()){
+          title += ': ' + page.year + '/' + page.month;
+      } else if (is_year()){
+          title += ': ' + page.year;
+      }
+  } else if (is_category()){
+      title = __('category') + ': ' + page.category;
+  } else if (is_tag()){
+      title = __('tag') + ': ' + page.tag;
+  }
+  %>
+
+  <title><% if (title){ %><%= title %> | <% } %><%= config.title %></title>
+
+  <%- partial('partial/_third-party/google-analytics') %>
+  <%- partial('partial/_third-party/baidu-analytics') %>
+  <% if (theme.baidu_push.enable){ %>
+      <%- partial('partial/_third-party/baidu-push') %>
+  <% } %>
+
+  <link rel="stylesheet" href="<%= url_for('css/style.css') %>" >
+  <link rel="stylesheet" href="<%= url_for('/css/partial/dark.css') %>" >
+
+  <% if (theme.fonts.font_link){ %>
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="">
+    <link rel="stylesheet" href="<%= theme.fonts.font_link %>"  media="print" onload="this.media='all'">
+  <% } %>
+  
+  <% if(theme.title_font.font_link){ %>
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="">
+    <link rel="stylesheet" href="<%= theme.title_font.font_link %>"  media="print" onload="this.media='all'">
+    <% } %>
+
+  <% if (theme.stylesheets !== undefined && theme.stylesheets.length > 0) { %>
+    <% theme.stylesheets.forEach(url => { %>
+      <link rel="stylesheet" href="<%= url_for(url) %>">
+    <% }); %>
+  <% } %>
+
+  <% if(theme.todark.enable){ %>
+    <script src="<%- url_for('/js/todark.js') %>"></script>
+    <% } %>
+</head>
+</html>

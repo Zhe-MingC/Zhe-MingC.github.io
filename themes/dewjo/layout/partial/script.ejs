@@ -1,0 +1,62 @@
+
+<script src="https://cdn.jsdelivr.net/npm/layui-src@2.5.5/dist/layui.min.js"></script>
+
+
+<% if (theme.scripts !== undefined && theme.scripts.length > 0) { %>
+  <% theme.scripts.forEach(url => { %>
+    <script src="<%- url_for(url) %>"></script>
+  <% }); %>
+<% } %>
+ 
+<% if (config.search && theme.local_search.enable) { %>
+  <%- partial('partial/_search/local-searchjs', {cache: true}) %>
+  <% } %>
+
+<% if(theme.lazyload.enable){ %>
+  <%- partial('partial/_modify/lazyload', {cache: true}) %>   
+  <% } %>
+
+<% if(theme.fancybox.enable) { %>
+  <%- partial('partial/_modify/fancybox', {cache: true}) %>   
+  <% } %>
+
+<% if(theme.mathjax.enable) { %>
+  <%- partial('partial/_maths/mathjax', {cache: true}) %>
+  <% } %>
+
+<% if(theme.mermaid.enable) { %>
+  <%- partial('partial/_maths/mermaid', {cache: true}) %>
+  <% } %>
+
+<% if(theme.reward.enable && is_post()) { %>
+  <%- partial('partial/_modify/rewards/rewardjs', {cache: true}) %>
+  <%} %>
+
+<% if(theme.audio.enable){ %>
+  <%- partial('partial/_modify/audio', {cache:true}) %>
+  <% } %>
+
+<% if(theme.instantpage.enable) { %>
+  <script src="<%= theme.instantpage.script %>" type="module" defer></script>
+  <% } %>
+
+<% if(theme.Click.firework){ %>
+  <script src="<%= theme.Click.firework_script %>"></script>
+  <% } %>
+
+<% if(theme.copy.enable){ %>
+  <%- partial('partial/_modify/copy', {cache:true}) %>  
+  <% } %>
+
+<script>
+  var btntop = $('#gotop');
+  btntop.on('click', function (e) {
+    e.preventDefault();
+    $('html, body').animate({ scrollTop: 0 }, '300');
+  });
+
+  var $table = $('.content table').not($('figure.highlight > table'))
+$table.each(function () {
+  $(this).wrap('<div class="table-wrap"></div>')
+})
+</script>

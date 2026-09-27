@@ -1,0 +1,55 @@
+
+<article id="post">
+  <div class="post-title"><%= post.title || '(no title)' %></div>
+  <%- partial('partial/post-meta', {cache:true}) %>
+  <% if(theme.toc.enable && post.toc == true) {%>
+    <div id="toc" class="toc">
+          <h1><%= __('Toc') %></h1>
+          <%- toc(post.content, {list_number: true}) %>
+      </div>
+    <% } %>
+  <div class="content">
+        <div><%-page.content%></div>
+        <% if(theme.copyright.enable){ %>
+          <div class="post-copyright">
+                  <div class="copyright-item">
+                      <span> <%= __('Author') %>: <%- config.author %></span>
+                  </div>
+                  <div class="copyright-item">
+                      <span> <%= __('Link') %>: <a href="<%- page.permalink %>"><%- page.permalink %></a></span>
+                  </div>
+                  <div class="copyright-item">
+                      <span> <%= __('License') %>: <%- theme.copyright.license_text %></span>
+                  </div>
+          </div>
+        <% } %>
+  </div>
+<% if(theme.sharejs.enable || theme.reward.enable){%>
+  <div class="share-reward">
+    <div class="share">
+        <%-partial('partial/_modify/sharejs', {cache:true}) %>
+      </div>
+        <div class="reward">
+          <%-partial('partial/_modify/rewards/reward', {cache:true}) %>
+        </div>
+    </div>
+    <% } %>
+    <div class="post_tags">
+      <% post.tags.each(function(tag){%>
+        <i class="fas fa-tag"></i> <a href="<%- url_for(tag.path) %>" class="tag"><%= tag.name %></a>
+      <% }) %>
+    </div>
+    <div class="post-nav">
+      <% if (post.prev){ %>
+        <div class="post-nav-prev post-nav-item">
+            <a href="<%- url_for(post.prev.path) %>" ><%= post.prev.title %><i class="fa fa-chevron-left"></i></a>
+        </div>
+      <% } %>
+      <% if (post.next){ %>
+        <div class="post-nav-next post-nav-item">
+            <a href="<%- url_for(post.next.path) %>" ><%= post.next.title %><i class="fa fa-chevron-right"></i></a>
+        </div>
+      <% } %>
+    </div>
+      <%- partial('partial/_comment/index') %>
+</article>

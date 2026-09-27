@@ -1,0 +1,27 @@
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-mode: 'dark';
+  }
+}
+[data-user-color-scheme="dark"] {
+  --color-mode:'dark'
+  --text: rgba(255,255,255,0.86);
+  --link: #def2ff;
+  --bg: #181c27;
+  --code: #c3c7cb;
+  --codebg: #3e4b5e;
+  --navbg: #252d38;
+  --item: rgba(255,255,255,0.86);
+  --meta: #bbbbbb7a;
+  --cpyr: #252d38;
+  img {
+	   filter: brightness(50%);
+	}
+  .note {
+		filter: brightness(50%)
+	}
+  .highlight, .gutter {
+    background-color: #3c495b !important;
+  }
+}

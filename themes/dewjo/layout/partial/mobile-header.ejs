@@ -1,0 +1,29 @@
+
+<div class="nav index" style="height: 60px;">
+    <div class="title animated fadeInDown">
+        <div class="layui-container">
+                <div class="nav-title"><a href="<%- url_for() %>" title="<%= config.title %>"><%= config.title %></a></div>
+            <div class="nav-list">
+                <button> <span class=""></span><span style="display: block;"></span><span class=""></span> </button>
+                <ul class="layui-nav" lay-filter="">
+                    <% for (var i in theme.menu){ %>
+                        <% var arr = theme.menu[i].split('||') %>
+                        <% var url = arr[0] %>
+                        <% var icon = arr[1] %>
+                        <% var color = arr[2] %>
+                    <li class="layui-nav-item">
+                        <a href="<%- url %>">
+                            <i class="<%- icon %>" style="color:<%- color %>;"></i>
+                            <span class="layui-nav-item-name"><%- __(i) %></span>
+                        </a>
+                    </li>
+                    <% } %>
+                    <% if (theme.todark.enable){ %>
+                        <li class="layui-nav-item" id="btn-toggle-dark">🌙</li>
+                    <% } %>
+                    <span class="layui-nav-bar" style="left: 342px; top: 78px; width: 0px; opacity: 0;"></span>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

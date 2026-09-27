@@ -1,0 +1,19 @@
+
+<div id="bottom-outer">
+    <div id="bottom-inner">
+        © 2020 <i class="fa fa-heart" id="heart"></i> <%= config.author %> 
+        <br>
+        Powered by 
+        <a href="http://hexo.io">hexo</a> | Theme is <a href="https://github.com/a2396837/hexo-theme-blank/"><%=config.theme%></a>
+        <% if (theme.ICP.enable){ %>
+          <div class="icp-info">
+            <% if(theme.ICP.icon){ %>
+            <img  class="icp-icon" src="<%=theme.ICP.icon %>">
+            <% } %>
+          <a href="<%=theme.ICP.link%>" target="_blank"> <%=theme.ICP.text%></a>
+        </div>
+        <% } %>
+    </div>  
+  </div>
+  <%- partial('partial/script') %>
+

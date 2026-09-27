@@ -1,0 +1,18 @@
+.DS_Store
+Thumbs.db
+db.json
+*.log
+node_modules/
+public/
+.deploy*/
+_multiconfig.yml
+
+# Local credentials and machine-specific configuration
+.env
+.env.*
+!.env.example
+.npmrc
+*.key
+*.pem
+_config.local.yml
+.local-backups/

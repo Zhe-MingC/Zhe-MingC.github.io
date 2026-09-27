@@ -1,0 +1,21 @@
+
+<article class="post-wrap page">
+    <h1 class="pagetitle"><%=page.title%></h1>
+    <section class="content">
+        <% if (page.archive || page.type === "archive") { %>
+            <%- partial('partial/archive') %>
+        <% } else if (page.type === "tags") { %>
+            <%- partial('partial/tags') %>
+        <% } else if (page.type === 'categories') { %>
+            <%- partial('partial/categories') %>
+        <% } else if (page.type === 'link') { %>
+            <%- partial('partial/link') %>
+        <% } else if (page.type === 'search') { %>
+            <%- partial('partial/_search/local-search') %>
+        <% } else { %>
+                <%- page.content %>
+        <% } %>
+     </section>
+        <%- partial('partial/_comment/index') %>
+</article>
+
