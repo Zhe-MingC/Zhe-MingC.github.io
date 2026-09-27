@@ -1,0 +1,595 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      <meta name="author" content="Zhe-MingC">
+  
+  
+      <meta name="subtitle" content="聚焦后端/DPDK/Linux/网络编程/云原生">
+  
+  
+      <meta name="description" content="记录技术学习与个人成长，分享经验与思考。">
+  
+  
+  
+    <link rel="alternate" href="/atom.xml" title="Tim Chen的技术成长记录" type="application/atom+xml">
+  
+
+  
+
+  <title>TGW 论文阅读笔记：高性能转发、状态迁移与故障恢复 | Tim Chen的技术成长记录</title>
+
+  
+
+  
+
+  
+
+  <link rel="stylesheet" href="/css/style.css" >
+  <link rel="stylesheet" href="/css/partial/dark.css" >
+
+  
+  
+  
+
+  
+    
+      <link rel="stylesheet" href="/css/partial/highlight/atom-one-light.css">
+    
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
+    
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css">
+    
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/a2396837/CDN@latest/css/iconfont.css">
+    
+  
+
+  
+    <script src="/js/todark.js"></script>
+    
+<meta name="generator" content="Hexo 7.3.0"></head>
+</html>
+
+    
+<div class="nav index" style="height: 60px;">
+    <div class="title animated fadeInDown">
+        <div class="layui-container">
+                <div class="nav-title"><a href="/" title="Tim Chen的技术成长记录">Tim Chen的技术成长记录</a></div>
+            <div class="nav-list">
+                <button> <span class=""></span><span style="display: block;"></span><span class=""></span> </button>
+                <ul class="layui-nav" lay-filter="">
+                    
+                        
+                        
+                        
+                        
+                    <li class="layui-nav-item">
+                        <a href="/search/ ">
+                            <i class=" fas fa-search-plus " style="color: rgb(3 169 244);"></i>
+                            <span class="layui-nav-item-name">搜索</span>
+                        </a>
+                    </li>
+                    
+                        
+                        
+                        
+                        
+                    <li class="layui-nav-item">
+                        <a href="/ ">
+                            <i class=" fab fa-fort-awesome " style="color: rgb(255 107 107);"></i>
+                            <span class="layui-nav-item-name">首页</span>
+                        </a>
+                    </li>
+                    
+                        
+                        
+                        
+                        
+                    <li class="layui-nav-item">
+                        <a href="/archives/ ">
+                            <i class=" fas fa-archive " style="color: rgb(10 189 227);"></i>
+                            <span class="layui-nav-item-name">归档</span>
+                        </a>
+                    </li>
+                    
+                        
+                        
+                        
+                        
+                    <li class="layui-nav-item">
+                        <a href="/tags/ ">
+                            <i class=" fas fa-hashtag " style="color: rgb(254 202 87);"></i>
+                            <span class="layui-nav-item-name">标签</span>
+                        </a>
+                    </li>
+                    
+                        
+                        
+                        
+                        
+                    <li class="layui-nav-item">
+                        <a href="/categories/ ">
+                            <i class=" far fa-folder-open " style="color: rgb(29 209 161);"></i>
+                            <span class="layui-nav-item-name">分类</span>
+                        </a>
+                    </li>
+                    
+                        
+                        
+                        
+                        
+                    <li class="layui-nav-item">
+                        <a href="/about/ ">
+                            <i class=" fab fa-grav " style="color: rgb(154 106 247);"></i>
+                            <span class="layui-nav-item-name">关于</span>
+                        </a>
+                    </li>
+                    
+                        
+                        
+                        
+                        
+                    <li class="layui-nav-item">
+                        <a href="/guestbook/ ">
+                            <i class=" fab fa-telegram " style="color: hsl(205deg 100% 50%);"></i>
+                            <span class="layui-nav-item-name">留言</span>
+                        </a>
+                    </li>
+                    
+                        
+                        
+                        
+                        
+                    <li class="layui-nav-item">
+                        <a href="/link/ ">
+                            <i class=" fab fa-weixin " style="color: hsl(152deg 73% 45%);"></i>
+                            <span class="layui-nav-item-name">友链</span>
+                        </a>
+                    </li>
+                    
+                    
+                        <li class="layui-nav-item" id="btn-toggle-dark">🌙</li>
+                    
+                    <span class="layui-nav-bar" style="left: 342px; top: 78px; width: 0px; opacity: 0;"></span>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+    
+<header class="header">
+        
+            <div class="logo">
+                    <a href="/"><img src="https://cdn.jsdelivr.net/gh/a2396837/CDN@latest/images/2020/07/27/baokemeng.webp" onerror=this.onerror=null,this.src="/img/loading.gif"></a>
+            </div>
+         
+    </div>
+     
+
+            <div class="motto">
+                <span>日拱一卒，功不唐捐</span>
+            </div>
+    
+    
+            <div class="social">
+                
+                        <a class="social-icon" href="https://github.com/Zhe-MingC" target="_blank" title="Github">
+                            <i class="iconfont icon-GitHub" aria-hidden="true"></i>
+                          </a>
+                 
+                        <a class="social-icon" href="mailto:chenmingz2001@gmail.com" target="_blank" title="Email">
+                            <i class="iconfont icon-email" aria-hidden="true"></i>
+                          </a>
+                 
+                        <a class="social-icon" href="/atom.xml" target="_blank" title="rss">
+                            <i class="iconfont icon-rss" aria-hidden="true"></i>
+                          </a>
+                 
+            </div>
+     
+</header>
+
+    
+<article id="post">
+  <div class="post-title">TGW 论文阅读笔记：高性能转发、状态迁移与故障恢复</div>
+  
+<div class="post-meta">
+    
+    
+      <div class="post-meta-item date">
+        <span title="发表于 2026.09.27"><i class="far fa-calendar-alt"></i> 2026.09.27</span>
+      </div>
+      <div class="post-meta-item updated">
+        <span title="更新于 2026.09.27"><i class="far fa-calendar-check"></i> 2026.09.27</span>
+      </div>
+     
+    
+      <div class="post-meta-item categories">
+        
+          <i class="fas fa-inbox article-meta__icon"></i> <a href="/categories/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">负载均衡</a>
+        
+      </div>
+     
+    
+     <div class="post-meta-item wordcount">
+        
+          <i class="fas fa-pencil-alt"></i> <span class="post-count">3k 字</span>
+           
+        
+          <i class="far fa-clock"></i> <span class="post-count">10 分钟</span>
+                               
+      </div>
+     
+</div>
+
+
+  
+    <div id="toc" class="toc">
+          <h1>目录</h1>
+          <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB"><span class="toc-number">1.</span> <span class="toc-text">一、论文阅读</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%97%B6%E9%97%B4%E7%82%B9%EF%BC%9A%E8%BF%99%E9%A1%B9%E6%8A%80%E6%9C%AF%E6%98%AF%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E6%8F%90%E5%87%BA%E7%9A%84%EF%BC%9F"><span class="toc-number">1.1.</span> <span class="toc-text">1. 时间点：这项技术是什么时候提出的？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E9%81%87%E5%88%B0%E4%BA%86%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="toc-number">1.2.</span> <span class="toc-text">2. 生产环境遇到了什么问题？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-TGW-%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E8%BF%99%E4%BA%9B%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="toc-number">1.3.</span> <span class="toc-text">3. TGW 如何解决这些问题？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%95%B4%E4%BD%93%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AB%AF%E5%88%B0%E7%AB%AF%E6%B5%81%E7%A8%8B"><span class="toc-number">1.4.</span> <span class="toc-text">4. 整体结构与端到端流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%85%B3%E9%94%AE%E6%9C%BA%E5%88%B6"><span class="toc-number">1.5.</span> <span class="toc-text">5. 关键机制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#5-1-%E7%8A%B6%E6%80%81%E8%BF%81%E7%A7%BB"><span class="toc-number">1.5.1.</span> <span class="toc-text">5.1 状态迁移</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-2-%E6%95%85%E9%9A%9C%E9%9F%A7%E6%80%A7"><span class="toc-number">1.5.2.</span> <span class="toc-text">5.2 故障韧性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-3-%E6%95%85%E9%9A%9C%E6%A3%80%E6%B5%8B%E4%B8%8E%E5%AE%9A%E4%BD%8D"><span class="toc-number">1.5.3.</span> <span class="toc-text">5.3 故障检测与定位</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-4-%E8%BF%90%E7%BB%B4%E7%BB%8F%E9%AA%8C"><span class="toc-number">1.5.4.</span> <span class="toc-text">5.4 运维经验</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E4%BB%A3%E5%85%A5%E4%B8%80%E4%B8%AA%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E5%9C%BA%E6%99%AF"><span class="toc-number">1.6.</span> <span class="toc-text">6. 代入一个系统设计场景</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#6-1-%E8%A7%A3%E5%86%B3%E4%BB%80%E4%B9%88-workload%EF%BC%9F"><span class="toc-number">1.6.1.</span> <span class="toc-text">6.1 解决什么 workload？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-2-%E6%8F%90%E4%BE%9B%E4%BB%80%E4%B9%88-consistency%EF%BC%9F"><span class="toc-number">1.6.2.</span> <span class="toc-text">6.2 提供什么 consistency？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-3-%E6%95%85%E9%9A%9C%E5%A6%82%E4%BD%95%E6%81%A2%E5%A4%8D%EF%BC%9F"><span class="toc-number">1.6.3.</span> <span class="toc-text">6.3 故障如何恢复？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-4-%E8%A7%84%E6%A8%A1%E4%B8%8A%E9%99%90%E5%9C%A8%E5%93%AA%E9%87%8C%EF%BC%9F"><span class="toc-number">1.6.4.</span> <span class="toc-text">6.4 规模上限在哪里？</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E5%90%8E%E7%BB%AD%E6%BC%94%E8%BF%9B%E6%96%B9%E5%90%91%E4%B8%8E%E5%8F%96%E8%88%8D"><span class="toc-number">1.7.</span> <span class="toc-text">7. 后续演进方向与取舍</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%BD%91%E5%85%B3%E7%9F%A5%E8%AF%86%E4%B8%8E%E6%80%9D%E8%80%83%E9%A2%98"><span class="toc-number">2.</span> <span class="toc-text">二、网关知识与思考题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%BB%80%E4%B9%88%E6%98%AF%E2%80%9C%E7%8A%B6%E6%80%81%E2%80%9D%EF%BC%9F"><span class="toc-number">2.1.</span> <span class="toc-text">1. 什么是“状态”？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Pipeline-%E7%9A%84%E5%BF%85%E8%A6%81%E6%80%A7"><span class="toc-number">2.2.</span> <span class="toc-text">2. Pipeline 的必要性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-90-%E5%88%87%E6%B5%81%E7%9A%84%E5%AE%89%E5%85%A8%E6%80%A7"><span class="toc-number">2.3.</span> <span class="toc-text">3. 90% 切流的安全性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%BF%AB%E9%80%9F%E6%94%B6%E6%95%9B%E7%9A%84%E5%85%B3%E9%94%AE%E5%AD%97%E6%AE%B5"><span class="toc-number">2.4.</span> <span class="toc-text">4. 快速收敛的关键字段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E9%80%89%E6%8B%A9%E6%80%A7%E5%90%8C%E6%AD%A5%E7%9A%84%E4%BB%A3%E4%BB%B7"><span class="toc-number">2.5.</span> <span class="toc-text">5. 选择性同步的代价</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E5%88%86%E6%95%A3%E5%BC%8F%E8%BF%81%E7%A7%BB%E7%9A%84%E5%A4%B1%E6%95%88%E6%9D%A1%E4%BB%B6"><span class="toc-number">2.6.</span> <span class="toc-text">6. 分散式迁移的失效条件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E5%AE%9A%E4%BD%8D%E8%AF%81%E6%8D%AE%E6%98%AF%E5%90%A6%E5%85%85%E5%88%86%EF%BC%9F"><span class="toc-number">2.7.</span> <span class="toc-text">7. 定位证据是否充分？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-%E7%BD%91%E5%85%B3%E6%81%A2%E5%A4%8D%E4%B8%8E%E4%B8%9A%E5%8A%A1%E6%81%A2%E5%A4%8D"><span class="toc-number">2.8.</span> <span class="toc-text">8. 网关恢复与业务恢复</span></a></li></ol></li></ol>
+      </div>
+    
+  <div class="content">
+        <div><p>本文是对 <strong>TGW: Operating an Efficient and Resilient Cloud Gateway at Scale</strong> 的阅读笔记，围绕“生产问题—核心机制—故障边界”整理自己的理解。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.usenix.org/conference/atc25/presentation/yang-yifan">论文及演讲页面：USENIX ATC ‘25</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.usenix.org/system/files/atc25-yang-yifan.pdf">论文 PDF</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/2523024">腾讯云团队的技术介绍</a></li>
+</ul>
+<p>文中的 TGW 指 <strong>Tencent Gateway</strong>。LD（Load Distributor）是转发节点；RS 指后端服务器；VIP 是对外提供服务的虚拟 IP。</p>
+<h2 id="一、论文阅读"><a href="#一、论文阅读" class="headerlink" title="一、论文阅读"></a>一、论文阅读</h2><h3 id="1-时间点：这项技术是什么时候提出的？"><a href="#1-时间点：这项技术是什么时候提出的？" class="headerlink" title="1. 时间点：这项技术是什么时候提出的？"></a>1. 时间点：这项技术是什么时候提出的？</h3><p>论文发表于 <strong>2025 年 USENIX ATC</strong>。这里要区分论文发表时间与系统诞生时间：论文介绍的是已经在生产环境运行并持续演进多年的 TGW，而不是 2025 年才开始运行的系统。<a target="_blank" rel="noopener" href="https://www.usenix.org/conference/atc25/presentation/yang-yifan">论文介绍</a></p>
+<h3 id="2-生产环境遇到了什么问题？"><a href="#2-生产环境遇到了什么问题？" class="headerlink" title="2. 生产环境遇到了什么问题？"></a>2. 生产环境遇到了什么问题？</h3><p><strong>网络游戏和直播场景</strong>对低时延、低抖动、低丢包有严格要求，服务器入口处的网关首先就要满足这些要求。</p>
+<p>与此同时，网关面临流量增长、单核热点、海量连接状态、在线扩缩容和设备故障等问题。</p>
+<h3 id="3-TGW-如何解决这些问题？"><a href="#3-TGW-如何解决这些问题？" class="headerlink" title="3. TGW 如何解决这些问题？"></a>3. TGW 如何解决这些问题？</h3><p><strong>高效报文处理</strong>：基于 DPDK 实现高性能转发。</p>
+<ul>
+<li><strong>RTC（Run-to-Completion）</strong>：无状态的 TGW-EIP 采用 RTC 模型处理报文。</li>
+<li><strong>Pipeline</strong>：有状态的 TGW-CLB 采用 Pipeline 与 RTC 结合的模型，将报文分发和处理分开。</li>
+</ul>
+<p><strong>可扩展的状态管理</strong>：通过在线状态迁移应对流量突发、大象流和集群调整，尽量保持服务连续性。</p>
+<p><strong>快速故障恢复</strong>：通过会话同步与冗余部署提高故障韧性，维持服务可用性。</p>
+<h3 id="4-整体结构与端到端流程"><a href="#4-整体结构与端到端流程" class="headerlink" title="4. 整体结构与端到端流程"></a>4. 整体结构与端到端流程</h3><p>这篇笔记主要关注四部分：报文转发、状态迁移、故障恢复，以及故障检测和定位。其中，TGW-EIP 负责无状态弹性公网接入，TGW-CLB 负责有状态的负载均衡。</p>
+<p>对于 TGW-CLB，可以沿着下面这条路径理解报文如何到达处理核：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">上游 ECMP：选择哪台 LD</span><br><span class="line">    ↓</span><br><span class="line">网卡 RSS：选择这台机器上的哪个 RX 队列</span><br><span class="line">    ↓</span><br><span class="line">软件 dispatcher：选择哪个处理 worker</span><br><span class="line">    ↓</span><br><span class="line">worker：查连接状态、选择或沿用 RS、执行转发</span><br><span class="line">    ↓</span><br><span class="line">后端服务器</span><br></pre></td></tr></table></figure>
+
+<p>这条路径也提示了几个不同层次的问题：流量落在哪台机器、落在哪个队列、由哪个 worker 保存和处理状态，以及最终选择哪个后端。</p>
+<h3 id="5-关键机制"><a href="#5-关键机制" class="headerlink" title="5. 关键机制"></a>5. 关键机制</h3><h4 id="5-1-状态迁移"><a href="#5-1-状态迁移" class="headerlink" title="5.1 状态迁移"></a>5.1 状态迁移</h4><p>一个典型场景是：<strong>将流量从较小的集群迁移到较大的集群，以应对流量突发或大象流。</strong></p>
+<ol>
+<li><strong>在线迁移</strong>：在重定向流量之前，先将旧集群中保存的连接信息转移到新集群。</li>
+<li><strong>大部分状态迁移完成后切流</strong>：迁移约 90% 的状态后，新集群就可以通过 BGP 宣告 VIP 路由。</li>
+<li><strong>处理迁移期间的新连接</strong>：旧集群仍可能建立新状态；新 LD 遇到未命中的连接时，将报文交给旧集群处理。</li>
+<li><strong>快速收敛</strong>：旧 LD 进行代理转发时，保留来自新 LD 的隧道封装信息，使回程能够经过新 LD。</li>
+<li><strong>状态聚合</strong>：以 VIP 为粒度管理迁移状态。</li>
+</ol>
+<p>90% 并不是“剩余状态可以直接丢弃”的意思。迁移期间仍需要旧集群代理，维持原来的后端选择。</p>
+<h4 id="5-2-故障韧性"><a href="#5-2-故障韧性" class="headerlink" title="5.2 故障韧性"></a>5.2 故障韧性</h4><p><strong>状态同步</strong>采用选择性、批量的方式：</p>
+<ul>
+<li>优先同步存活超过 3 秒的连接；3 秒是工作负载下的经验选择。</li>
+<li>使用 UDP 批量发送，减少同步报文数量；批次达到 MTU 或达到超时条件时发送，并非一直等到攒满 MTU。</li>
+<li>避免为大量短连接承担额外同步开销，同时接受未备份连接的恢复风险。</li>
+</ul>
+<p><strong>容错模型</strong>分为三个层次：</p>
+<table>
+<thead>
+<tr>
+<th>层次</th>
+<th>模式</th>
+<th>处理方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>可用区内</td>
+<td>Active-Active</td>
+<td>LD 以双活方式工作，故障后由其他节点接管</td>
+</tr>
+<tr>
+<td>可用区间</td>
+<td>Active-Standby</td>
+<td>不同 AZ 组成冗余对，通过 IP 前缀路由宣告实现主备切换</td>
+</tr>
+<tr>
+<td>区域间</td>
+<td>跨 Region 切换</td>
+<td>整个 Region 不可用时，通过 DNS 记录等入口机制引流到其他 Region</td>
+</tr>
+</tbody></table>
+<p><strong>分散式迁移</strong>用于缩小异常流量引发的故障范围。例如，某个 VIP 的异常报文触发 LD 崩溃时，可以将受影响集群的 VIP 集合分成多组，分散到其他集群，降低单个故障 VIP 对其他业务的影响。这里的分组对象是 VIP 集合，不能简单理解成把同一个 VIP 的所有流量随机分成十份。</p>
+<h4 id="5-3-故障检测与定位"><a href="#5-3-故障检测与定位" class="headerlink" title="5.3 故障检测与定位"></a>5.3 故障检测与定位</h4><p><strong>基于污点的遥测</strong>通过 TP（Trace Point）记录经过的位置，通过 DP（Drop Point）记录丢包原因。</p>
+<ul>
+<li><strong>观测点</strong>：多个拥有公网 IP 地址的探测服务器。</li>
+<li><strong>日志分析</strong>：在线与离线分析相结合。</li>
+<li><strong>定位方法</strong>：通过 TP 识别报文经过的 LD，通过 DP 查找明确的丢弃环节和原因。</li>
+</ul>
+<p>探测报文与日志的关系可以分开理解：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Prober TX</span><br><span class="line">   │ SYN：携带探测标记</span><br><span class="line">   ▼</span><br><span class="line">LD RX</span><br><span class="line">   │ 记录 TP，并写入唯一 LD ID</span><br><span class="line">   │</span><br><span class="line">   ├── 正常：LD TX → Backend</span><br><span class="line">   │                     │</span><br><span class="line">   │                     │ 将污点复制到 SYN/ACK</span><br><span class="line">   │                     ▼</span><br><span class="line">   │              SYN/ACK → LD → Prober</span><br><span class="line">   │</span><br><span class="line">   └── 异常：记录 DP 和丢包原因 → 日志分析</span><br></pre></td></tr></table></figure>
+
+<p>DP 是丢包定位证据；不能把记录 DP 理解为丢弃的报文仍会沿正常响应路径返回。</p>
+<h4 id="5-4-运维经验"><a href="#5-4-运维经验" class="headerlink" title="5.4 运维经验"></a>5.4 运维经验</h4><p>可用性建设的两个关键词是 <strong>故障域隔离</strong> 和 <strong>冗余</strong>。</p>
+<ul>
+<li><strong>解耦</strong>：在 Region、AZ、Cluster 等层次划分模块，同一层的模块也尽量彼此解耦。</li>
+<li><strong>冗余</strong>：包括 AZ、机架、机器，以及网卡和光纤链路等多个层次。</li>
+</ul>
+<h3 id="6-代入一个系统设计场景"><a href="#6-代入一个系统设计场景" class="headerlink" title="6. 代入一个系统设计场景"></a>6. 代入一个系统设计场景</h3><p>以下是结合游戏、直播场景对设计边界的整理。</p>
+<h4 id="6-1-解决什么-workload？"><a href="#6-1-解决什么-workload？" class="headerlink" title="6.1 解决什么 workload？"></a>6.1 解决什么 workload？</h4><p>入口流量持续增长、连接状态较多，同时需要在线扩缩容和故障切换的游戏或直播业务。</p>
+<h4 id="6-2-提供什么-consistency？"><a href="#6-2-提供什么-consistency？" class="headerlink" title="6.2 提供什么 consistency？"></a>6.2 提供什么 consistency？</h4><ul>
+<li>正常运行时，同一条连接持续映射到同一个后端。</li>
+<li>网关迁移期间，即使报文改走新 LD，也应保持原来的后端选择。</li>
+<li>新 LD 缺少状态时，通过旧集群代理获取正确处理结果，避免直接重新选择后端。</li>
+<li>故障备份采用异步、选择性的周期同步，没有为每一次状态变化执行同步提交。</li>
+</ul>
+<h4 id="6-3-故障如何恢复？"><a href="#6-3-故障如何恢复？" class="headerlink" title="6.3 故障如何恢复？"></a>6.3 故障如何恢复？</h4><table>
+<thead>
+<tr>
+<th>事件</th>
+<th>处理方式</th>
+<th>关键前提或代价</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>VIP 热点、计划维护</td>
+<td>在线迁移状态并切流</td>
+<td>旧集群仍能代理；新集群有余量；迁移期间有额外流量</td>
+</tr>
+<tr>
+<td>单个 LD 故障</td>
+<td>路由摘除，其他 LD 接管</td>
+<td>所需状态已备份，剩余节点有容量</td>
+</tr>
+<tr>
+<td>AZ 网关侧故障</td>
+<td>另一 AZ 的备用前缀接管</td>
+<td>备用状态、网络路径和后端仍可用</td>
+</tr>
+<tr>
+<td>异常流量反复触发崩溃</td>
+<td>按 VIP 集合分散式冷迁移</td>
+<td>牺牲部分连接连续性，缩小故障范围</td>
+</tr>
+<tr>
+<td>整个 Region 故障</td>
+<td>DNS／客户端切换入口</td>
+<td>客户端重连，其他 Region 的业务也必须已准备好</td>
+</tr>
+</tbody></table>
+<h4 id="6-4-规模上限在哪里？"><a href="#6-4-规模上限在哪里？" class="headerlink" title="6.4 规模上限在哪里？"></a>6.4 规模上限在哪里？</h4><ul>
+<li>单核处理上限：单条大流或一个亲和组可能压满一个核。</li>
+<li>单机 PPS、网卡带宽、内存访问和状态表容量。</li>
+<li>状态迁移带宽，以及代理旧集群产生的流量放大。</li>
+<li>故障后剩余节点的处理能力。</li>
+<li>备用集群和跨 AZ 链路容量。</li>
+</ul>
+<h3 id="7-后续演进方向与取舍"><a href="#7-后续演进方向与取舍" class="headerlink" title="7. 后续演进方向与取舍"></a>7. 后续演进方向与取舍</h3><p>我的理解是，应先判断主要瓶颈在哪里：</p>
+<ul>
+<li>当瓶颈主要来自通用 CPU 的转发成本时，可以考虑硬件卸载。</li>
+<li>当瓶颈主要来自状态迁移与同步时，可以考虑减少需要复制的状态，或者改变状态放置位置。</li>
+</ul>
+<p>不同瓶颈对应不同的演进方向。</p>
+<h2 id="二、网关知识与思考题"><a href="#二、网关知识与思考题" class="headerlink" title="二、网关知识与思考题"></a>二、网关知识与思考题</h2><h3 id="1-什么是“状态”？"><a href="#1-什么是“状态”？" class="headerlink" title="1. 什么是“状态”？"></a>1. 什么是“状态”？</h3><p>讨论状态迁移之前，需要先区分状态属于哪一层。</p>
+<table>
+<thead>
+<tr>
+<th>信息</th>
+<th>例子</th>
+<th>通常由谁保存</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>服务配置</td>
+<td>VIP 对应哪些 RS、权重是多少</td>
+<td>控制面及网关规则表</td>
+</tr>
+<tr>
+<td><strong>网关每流状态</strong></td>
+<td><strong>连接 F 已选择 RS2、NAT 映射、超时时间、连接状态</strong></td>
+<td><strong>LD／处理 worker</strong></td>
+</tr>
+<tr>
+<td>TCP 端点状态</td>
+<td>序列号、重传队列、接收窗口、socket</td>
+<td>客户端和后端的 TCP 协议栈</td>
+</tr>
+<tr>
+<td>应用状态</td>
+<td>玩家在哪个房间、当前血量、已处理到哪个操作</td>
+<td>游戏进程及其存储系统</td>
+</tr>
+</tbody></table>
+<h3 id="2-Pipeline-的必要性"><a href="#2-Pipeline-的必要性" class="headerlink" title="2. Pipeline 的必要性"></a>2. Pipeline 的必要性</h3><p>某业务希望同一客户端的 TCP 和 UDP 流由同一个处理核负责。仅依赖五元组 RSS 会遇到什么问题？增加 dispatcher 后又引入哪些成本？</p>
+<p>可以沿着前面的 <strong>ECMP → RSS → dispatcher → worker</strong> 路径，分别思考机器选择、队列选择和处理核选择，而不是把它们看成同一次负载均衡。</p>
+<h3 id="3-90-切流的安全性"><a href="#3-90-切流的安全性" class="headerlink" title="3. 90% 切流的安全性"></a>3. 90% 切流的安全性</h3><p>连接 F 的状态只在旧 LD1 上，新集群已经开始接收 F 的后续报文。报文如何抵达原后端？为什么旧集群的其他 LD 不会重复转发？</p>
+<p>新 LD 在迁移期间遇到状态未命中，将报文复制给旧集群的各个 LD；<strong>只有状态标记的原始创建者继续转发</strong>，从而保持原来的后端选择，并避免重复转发。</p>
+<h3 id="4-快速收敛的关键字段"><a href="#4-快速收敛的关键字段" class="headerlink" title="4. 快速收敛的关键字段"></a>4. 快速收敛的关键字段</h3><p>如果旧 LD 把 GRE 外层源 IP 改成自己的地址，回程学习会发生什么变化？如果后端长时间不回包，快速收敛机制会受到什么影响？</p>
+<p>如果旧 LD 改成自己的外层源 IP，vSwitch 就会学到旧 LD，回程无法按这个机制切到新 LD。后端长时间不回包时，也需要考虑依赖回程学习的收敛条件是否仍然满足。</p>
+<h3 id="5-选择性同步的代价"><a href="#5-选择性同步的代价" class="headerlink" title="5. 选择性同步的代价"></a>5. 选择性同步的代价</h3><p>一条建立了 1 秒的连接遇到 LD 崩溃，另一条已经持续 10 分钟、备份成功的连接也遇到同样故障。能否给予它们相同的恢复保证？为什么？</p>
+<p>在作者观察到的工作负载下，备份大量短连接的成本较高，而其中很多连接在备份完成前就结束了。因此，系统选择优先备份持续活跃的连接，并接受未备份连接的恢复风险。</p>
+<h3 id="6-分散式迁移的失效条件"><a href="#6-分散式迁移的失效条件" class="headerlink" title="6. 分散式迁移的失效条件"></a>6. 分散式迁移的失效条件</h3><p>一个集群服务 100 个 VIP，其中 VIP37 的报文会触发崩溃。如何分成十组？如果触发条件同时存在于 30 个 VIP 中，“影响缩小到十分之一”的判断还成立吗？</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">VIP 1–10   → 备用集合 A</span><br><span class="line">VIP 11–20  → 备用集合 B</span><br><span class="line">VIP 21–30  → 备用集合 C</span><br><span class="line">VIP 31–40  → 备用集合 D  ← VIP37 在这里</span><br><span class="line">……</span><br></pre></td></tr></table></figure>
+
+<p>这个例子提醒我，故障隔离效果取决于触发条件在各个 VIP 分组中的分布，不能脱离故障分布直接套用“十分之一”。</p>
+<h3 id="7-定位证据是否充分？"><a href="#7-定位证据是否充分？" class="headerlink" title="7. 定位证据是否充分？"></a>7. 定位证据是否充分？</h3><p>Prober 发出了 SYN，没有收到 SYN&#x2F;ACK，也没有看到 DP 日志。能否直接判断 LD 崩溃？下一步需要从哪些位置获取证据？</p>
+<p>根据 TP 查找经过的路径，根据 DP 查找丢弃证据。没有响应且没有 DP 日志，并不足以直接证明 LD 崩溃，还要检查探测路径和日志链路是否完整。</p>
+<h3 id="8-网关恢复与业务恢复"><a href="#8-网关恢复与业务恢复" class="headerlink" title="8. 网关恢复与业务恢复"></a>8. 网关恢复与业务恢复</h3><p>LD 故障后，新 LD 已恢复原来的五元组到后端的映射，但后端游戏进程同时重启了。为什么玩家仍可能掉线？需要在哪一层补充能力？</p>
+<p>这里需要分别考虑 <strong>传输连接恢复、应用会话恢复、业务状态恢复</strong>。恢复网关映射，不等于恢复 TCP 端点状态，更不等于恢复游戏进程中的业务状态。</p>
+</div>
+        
+          <div class="post-copyright">
+                  <div class="copyright-item">
+                      <span> 作者: Zhe-MingC</span>
+                  </div>
+                  <div class="copyright-item">
+                      <span> 链接: <a href="https://zhe-mingc.github.io/2026/09/27/tgw-atc-2025-notes/">https://zhe-mingc.github.io/2026/09/27/tgw-atc-2025-notes/</a></span>
+                  </div>
+                  <div class="copyright-item">
+                      <span> 声明: 本博客所有文章除特别声明外，均采用许可协议 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> 转载请注明出处！</span>
+                  </div>
+          </div>
+        
+  </div>
+
+  <div class="share-reward">
+    <div class="share">
+        
+<div class="social-share" data-sites="facebook,twitter,wechat,weibo,qq"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css">
+<script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script>
+
+
+      </div>
+        <div class="reward">
+          
+        </div>
+    </div>
+    
+    <div class="post_tags">
+      
+        <i class="fas fa-tag"></i> <a href="/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" class="tag">论文阅读</a>
+      
+        <i class="fas fa-tag"></i> <a href="/tags/TGW/" class="tag">TGW</a>
+      
+        <i class="fas fa-tag"></i> <a href="/tags/DPDK/" class="tag">DPDK</a>
+      
+    </div>
+    <div class="post-nav">
+      
+      
+        <div class="post-nav-next post-nav-item">
+            <a href="/2025/08/16/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BADPDK%E7%AC%94%E8%AE%B0/" >深入浅出DPDK总结<i class="fa fa-chevron-right"></i></a>
+        </div>
+      
+    </div>
+      
+
+
+
+
+</article>
+
+    
+<a id="gotop" href="javascript:" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    
+
+
+
+
+
+
+    
+<div id="bottom-outer">
+    <div id="bottom-inner">
+        © 2025–2026 <i class="fa fa-heart" id="heart"></i> Zhe-MingC
+        <br>
+        Powered by 
+        <a target="_blank" rel="noopener" href="http://hexo.io">hexo</a> | Theme is <a target="_blank" rel="noopener" href="https://github.com/a2396837/hexo-theme-blank/">dewjo</a>
+        
+          <div class="icp-info">
+            
+          <a href="" target="_blank"> </a>
+        </div>
+        
+    </div>  
+  </div>
+  
+<script src="https://cdn.jsdelivr.net/npm/layui-src@2.5.5/dist/layui.min.js"></script>
+
+
+
+  
+    <script src="/js/script.js"></script>
+  
+    <script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script>
+  
+
+ 
+
+  <script src="/js/local-search.js"></script>
+<script type="text/javascript">      
+  var search_path = "search.xml";
+if (search_path.length == 0) {
+  search_path = "search.xml";
+}
+var path = "/" + search_path;
+  searchFunc(path, 'local-search-input', 'local-search-result');
+</script>
+  
+
+
+
+
+  <script>
+    var images = $('img').not('.nav-logo img').not('.card img').not($('a>img')).not('.reward-content img')
+    images.each(function (i, o) {
+      var lazyloadSrc = $(o).attr('data-src') ? $(o).attr('data-src') : $(o).attr('src')
+      $(o).wrap(`<a href="${lazyloadSrc}" data-fancybox="group" data-caption="${$(o).attr('alt')}" class="fancybox"></a>`)
+    })
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script>
+  <script>
+        $().fancybox({
+      selector: '[data-fancybox]',
+      loop: true,
+      transitionEffect: 'slide',
+      protect: true,
+      buttons: ['slideShow', 'fullScreen', 'thumbs', 'close']
+    })
+  </script>   
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module" defer></script>
+  
+
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js"></script>
+<script>
+!function (e, t, a) {
+  var initCopyCode = function(){
+    var copyHtml = '';
+    copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+    copyHtml += '  <i class="fa fa-clipboard"></i><span>复制</span>';
+    copyHtml += '</button>';
+    $(".highlight .code pre").before(copyHtml);
+    new ClipboardJS('.btn-copy', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+  }
+  initCopyCode();
+}(window, document);
+</script>  
+  
+
+<script>
+  var btntop = $('#gotop');
+  btntop.on('click', function (e) {
+    e.preventDefault();
+    $('html, body').animate({ scrollTop: 0 }, '300');
+  });
+
+  var $table = $('.content table').not($('figure.highlight > table'))
+$table.each(function () {
+  $(this).wrap('<div class="table-wrap"></div>')
+})
+</script>
+
+
+</html>

@@ -10,7 +10,22 @@
   <rights>All rights reserved 2026, Zhe-MingC</rights>
   <subtitle>聚焦后端/DPDK/Linux/网络编程/云原生</subtitle>
   <title>Tim Chen的技术成长记录</title>
-  <updated>2026-09-27T08:13:57.331Z</updated>
+  <updated>2026-09-27T13:46:58.000Z</updated>
+  <entry>
+    <author>
+      <name>Zhe-MingC</name>
+    </author>
+    <category term="负载均衡" scheme="https://zhe-mingc.github.io/categories/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/"/>
+    <category term="论文阅读" scheme="https://zhe-mingc.github.io/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/"/>
+    <category term="TGW" scheme="https://zhe-mingc.github.io/tags/TGW/"/>
+    <category term="DPDK" scheme="https://zhe-mingc.github.io/tags/DPDK/"/>
+    <id>https://zhe-mingc.github.io/2026/09/27/tgw-atc-2025-notes/</id>
+    <link href="https://zhe-mingc.github.io/2026/09/27/tgw-atc-2025-notes/"/>
+    <published>2026-09-27T13:46:58.000Z</published>
+    <summary>从游戏和直播的网关需求出发，整理 TGW 的报文处理、在线状态迁移、故障恢复与定位机制，以及连接状态和业务恢复的边界。</summary>
+    <title>TGW 论文阅读笔记：高性能转发、状态迁移与故障恢复</title>
+    <updated>2026-09-27T13:46:58.000Z</updated>
+  </entry>
   <entry>
     <author>
       <name>Zhe-MingC</name>
