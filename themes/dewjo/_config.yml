@@ -35,11 +35,12 @@ menu:
   home: / || fab fa-fort-awesome || rgb(255 107 107)
   archive: /archives/ || fas fa-archive || rgb(10 189 227)
   tag: /tags/ || fas fa-hashtag || rgb(254 202 87)
-  categories: /categories || far fa-folder-open || rgb(29 209 161)
+  categories: /categories/ || far fa-folder-open || rgb(29 209 161)
   about: /about/ || fab fa-grav || rgb(154 106 247)
   guestbook: /guestbook/ || fab fa-telegram || hsl(205deg 100% 50%)
   friends: /link/ || fab fa-weixin || hsl(152deg 73% 45%)
-  说说: /shuoshuo/ || fas fa-coffee ||#31c7c1
+  # Enable this menu item after adding content to source/shuoshuo/index.md.
+  # 说说: /shuoshuo/ || fas fa-coffee || #31c7c1
 
 
 
@@ -113,7 +114,7 @@ auto_excerpt:
 # Lazyload (图片懒加载)
 # https://github.com/verlok/lazyload
 lazyload:
-  enable: true
+  enable: false # Article images use native browser lazy loading via marked.
   image: /img/loading.gif
   script: https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js
 
@@ -164,7 +165,7 @@ sharejs:
 
 # 赞助/捐献
 reward:
-  enable: true
+  enable: false
   WeChatQR: /img/wechat.jpg                 # 微信收款码
 
 
@@ -220,7 +221,7 @@ Click:
 ##评论系统，当您打开一个评论系统，其他评论系统必须关掉:enable: flase
 # Valine 评论系统  https://valine.js.org
 valine:
-  enable: true # 如果使用valine，请设置改之为true
+  enable: false # Enable only after configuring a working comment service.
   appid: # leancloud application app id
   appkey: # leancloud application app key
   placeholder: 评论记得带上邮箱,你的留言我会马上收到邮箱提醒哒
@@ -257,7 +258,6 @@ stylesheets:
 scripts:
 - /js/script.js
 - https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js
-
 
 
 

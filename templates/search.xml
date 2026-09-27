@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+{% for collection in [posts, pages] %}
+{% if collection %}
+{% for item in collection.toArray() %}
+{% if item.indexing != false %}
+  {# Hexo custom permalinks can have a leading slash; config.root already has one. #}
+  {% set item_url = (url + (item.path | replace(r/^\/+/, ''))) | uriencode %}
+  <entry>
+    <title>{{ item.title | escape }}</title>
+    <link href="{{ item_url | escape }}"/>
+    <url>{{ item_url | escape }}</url>
+    {% if content %}
+    <content type="html"><![CDATA[{{ item.content | noControlChars | replace(']]>', ']]]]><![CDATA[>') | safe }}]]></content>
+    {% endif %}
+    {% if item.categories and item.categories.length > 0 %}
+    <categories>
+      {% for category in item.categories.toArray() %}<category>{{ category.name | escape }}</category>{% endfor %}
+    </categories>
+    {% endif %}
+    {% if item.tags and item.tags.length > 0 %}
+    <tags>
+      {% for tag in item.tags.toArray() %}<tag>{{ tag.name | escape }}</tag>{% endfor %}
+    </tags>
+    {% endif %}
+  </entry>
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endfor %}
+</search>

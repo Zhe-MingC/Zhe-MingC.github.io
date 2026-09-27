@@ -3,18 +3,18 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Hexo
-subtitle: ''
-description: ''
+title: Tim Chen的技术成长记录
+subtitle: 聚焦后端/DPDK/Linux/网络编程/云原生
+description: 记录技术学习与个人成长，分享经验与思考。
 keywords:
 author: Zhe-MingC
 language: zh-CN
 # language: en
-timezone: ''
+timezone: Asia/Shanghai
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
-url: https://Zhe-MingC.github.io
+url: https://zhe-mingc.github.io
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:
@@ -42,6 +42,11 @@ external_link:
 filename_case: 0
 render_drafts: false
 post_asset_folder: true
+# Use the renderer's built-in support for post asset folders.
+marked:
+  prependRoot: true
+  postAsset: true
+  lazyload: true
 relative_link: false
 future: true
 syntax_highlighter: highlight.js
@@ -103,6 +108,16 @@ search:
   path: search.xml
   field: post
   content: true
+  template: ./templates/search.xml
+
+# The theme already includes the feed discovery link.
+feed:
+  type: atom
+  path: atom.xml
+  limit: 20
+  content: false
+  autodiscovery: false
+
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
