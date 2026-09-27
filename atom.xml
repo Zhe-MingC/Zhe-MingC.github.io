@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <author>
+    <name>Zhe-MingC</name>
+  </author>
+  <generator uri="https://hexo.io/">Hexo</generator>
+  <id>https://zhe-mingc.github.io/</id>
+  <link href="https://zhe-mingc.github.io/" rel="alternate"/>
+  <link href="https://zhe-mingc.github.io/atom.xml" rel="self"/>
+  <rights>All rights reserved 2026, Zhe-MingC</rights>
+  <subtitle>聚焦后端/DPDK/Linux/网络编程/云原生</subtitle>
+  <title>Tim Chen的技术成长记录</title>
+  <updated>2026-09-27T08:13:57.331Z</updated>
+  <entry>
+    <author>
+      <name>Zhe-MingC</name>
+    </author>
+    <category term="技术学习" scheme="https://zhe-mingc.github.io/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    <category term="DPDK" scheme="https://zhe-mingc.github.io/tags/DPDK/"/>
+    <id>https://zhe-mingc.github.io/2025/08/16/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BADPDK%E7%AC%94%E8%AE%B0/</id>
+    <link href="https://zhe-mingc.github.io/2025/08/16/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BADPDK%E7%AC%94%E8%AE%B0/"/>
+    <published>2025-08-24T15:32:43.000Z</published>
+    <summary>《深入浅出DPDK》快速总结</summary>
+    <title>深入浅出DPDK总结</title>
+    <updated>2026-09-27T08:13:57.331Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>Zhe-MingC</name>
+    </author>
+    <category term="个人成长" scheme="https://zhe-mingc.github.io/categories/%E4%B8%AA%E4%BA%BA%E6%88%90%E9%95%BF/"/>
+    <category term="成长" scheme="https://zhe-mingc.github.io/tags/%E6%88%90%E9%95%BF/"/>
+    <id>https://zhe-mingc.github.io/2025/08/16/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/</id>
+    <link href="https://zhe-mingc.github.io/2025/08/16/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/"/>
+    <published>2025-08-16T03:52:09.000Z</published>
+    <summary>描述我创办这个博客的理由</summary>
+    <title>我的第一篇博客</title>
+    <updated>2025-08-16T09:12:41.785Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>Zhe-MingC</name>
+    </author>
+    <category term="成长" scheme="https://zhe-mingc.github.io/tags/%E6%88%90%E9%95%BF/"/>
+    <id>https://zhe-mingc.github.io/2025/08/16/hello-world/</id>
+    <link href="https://zhe-mingc.github.io/2025/08/16/hello-world/"/>
+    <published>2025-08-16T02:52:09.000Z</published>
+    <summary>
+      <![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for]]>
+    </summary>
+    <title>Hello World</title>
+    <updated>2025-08-16T07:50:51.948Z</updated>
+  </entry>
+</feed>
