@@ -222,10 +222,10 @@
     
      <div class="post-meta-item wordcount">
         
-          <i class="fas fa-pencil-alt"></i> <span class="post-count">3.2k 字</span>
+          <i class="fas fa-pencil-alt"></i> <span class="post-count">3.6k 字</span>
            
         
-          <i class="far fa-clock"></i> <span class="post-count">11 分钟</span>
+          <i class="far fa-clock"></i> <span class="post-count">12 分钟</span>
                                
       </div>
      
@@ -235,7 +235,7 @@
   
     <div id="toc" class="toc">
           <h1>目录</h1>
-          <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB"><span class="toc-number">1.</span> <span class="toc-text">一、论文阅读</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%97%B6%E9%97%B4%E7%82%B9%EF%BC%9A%E8%BF%99%E9%A1%B9%E6%8A%80%E6%9C%AF%E6%98%AF%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E6%8F%90%E5%87%BA%E7%9A%84%EF%BC%9F"><span class="toc-number">1.1.</span> <span class="toc-text">1. 时间点：这项技术是什么时候提出的？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E9%81%87%E5%88%B0%E4%BA%86%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="toc-number">1.2.</span> <span class="toc-text">2. 生产环境遇到了什么问题？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-TGW-%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E8%BF%99%E4%BA%9B%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="toc-number">1.3.</span> <span class="toc-text">3. TGW 如何解决这些问题？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84"><span class="toc-number">1.4.</span> <span class="toc-text">4. 整体架构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1-%E7%AB%AF%E5%88%B0%E7%AB%AF%E6%B5%81%E7%A8%8B%EF%BC%88Life-of-a-Request%EF%BC%89"><span class="toc-number">1.4.1.</span> <span class="toc-text">4.1 端到端流程（Life of a Request）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%85%B3%E9%94%AE%E6%9C%BA%E5%88%B6"><span class="toc-number">1.5.</span> <span class="toc-text">5. 关键机制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#5-1-%E7%8A%B6%E6%80%81%E8%BF%81%E7%A7%BB"><span class="toc-number">1.5.1.</span> <span class="toc-text">5.1 状态迁移</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-2-%E6%95%85%E9%9A%9C%E9%9F%A7%E6%80%A7"><span class="toc-number">1.5.2.</span> <span class="toc-text">5.2 故障韧性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-3-%E6%95%85%E9%9A%9C%E6%A3%80%E6%B5%8B%E4%B8%8E%E5%AE%9A%E4%BD%8D"><span class="toc-number">1.5.3.</span> <span class="toc-text">5.3 故障检测与定位</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-4-%E8%BF%90%E7%BB%B4%E7%BB%8F%E9%AA%8C"><span class="toc-number">1.5.4.</span> <span class="toc-text">5.4 运维经验</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E4%BB%A3%E5%85%A5%E4%B8%80%E4%B8%AA%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E5%9C%BA%E6%99%AF"><span class="toc-number">1.6.</span> <span class="toc-text">6. 代入一个系统设计场景</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#6-1-%E8%A7%A3%E5%86%B3%E4%BB%80%E4%B9%88-workload%EF%BC%9F"><span class="toc-number">1.6.1.</span> <span class="toc-text">6.1 解决什么 workload？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-2-%E6%8F%90%E4%BE%9B%E4%BB%80%E4%B9%88-consistency%EF%BC%9F"><span class="toc-number">1.6.2.</span> <span class="toc-text">6.2 提供什么 consistency？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-3-%E6%95%85%E9%9A%9C%E5%A6%82%E4%BD%95%E6%81%A2%E5%A4%8D%EF%BC%9F"><span class="toc-number">1.6.3.</span> <span class="toc-text">6.3 故障如何恢复？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-4-%E8%A7%84%E6%A8%A1%E4%B8%8A%E9%99%90%E5%9C%A8%E5%93%AA%E9%87%8C%EF%BC%9F"><span class="toc-number">1.6.4.</span> <span class="toc-text">6.4 规模上限在哪里？</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E5%90%8E%E7%BB%AD%E6%BC%94%E8%BF%9B%E6%96%B9%E5%90%91%E4%B8%8E%E5%8F%96%E8%88%8D"><span class="toc-number">1.7.</span> <span class="toc-text">7. 后续演进方向与取舍</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%BD%91%E5%85%B3%E7%9F%A5%E8%AF%86%E4%B8%8E%E6%80%9D%E8%80%83%E9%A2%98"><span class="toc-number">2.</span> <span class="toc-text">二、网关知识与思考题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%BB%80%E4%B9%88%E6%98%AF%E2%80%9C%E7%8A%B6%E6%80%81%E2%80%9D%EF%BC%9F"><span class="toc-number">2.1.</span> <span class="toc-text">1. 什么是“状态”？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Pipeline-%E7%9A%84%E5%BF%85%E8%A6%81%E6%80%A7"><span class="toc-number">2.2.</span> <span class="toc-text">2. Pipeline 的必要性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-90-%E5%88%87%E6%B5%81%E7%9A%84%E5%AE%89%E5%85%A8%E6%80%A7"><span class="toc-number">2.3.</span> <span class="toc-text">3. 90% 切流的安全性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%BF%AB%E9%80%9F%E6%94%B6%E6%95%9B%E7%9A%84%E5%85%B3%E9%94%AE%E5%AD%97%E6%AE%B5"><span class="toc-number">2.4.</span> <span class="toc-text">4. 快速收敛的关键字段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E9%80%89%E6%8B%A9%E6%80%A7%E5%90%8C%E6%AD%A5%E7%9A%84%E4%BB%A3%E4%BB%B7"><span class="toc-number">2.5.</span> <span class="toc-text">5. 选择性同步的代价</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E5%88%86%E6%95%A3%E5%BC%8F%E8%BF%81%E7%A7%BB%E7%9A%84%E5%A4%B1%E6%95%88%E6%9D%A1%E4%BB%B6"><span class="toc-number">2.6.</span> <span class="toc-text">6. 分散式迁移的失效条件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E5%AE%9A%E4%BD%8D%E8%AF%81%E6%8D%AE%E6%98%AF%E5%90%A6%E5%85%85%E5%88%86%EF%BC%9F"><span class="toc-number">2.7.</span> <span class="toc-text">7. 定位证据是否充分？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-%E7%BD%91%E5%85%B3%E6%81%A2%E5%A4%8D%E4%B8%8E%E4%B8%9A%E5%8A%A1%E6%81%A2%E5%A4%8D"><span class="toc-number">2.8.</span> <span class="toc-text">8. 网关恢复与业务恢复</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-%E5%A5%87%E5%81%B6%E8%B7%AF%E7%94%B1%E6%98%AF%E4%BB%80%E4%B9%88%E6%84%8F%E6%80%9D%EF%BC%9F"><span class="toc-number">2.9.</span> <span class="toc-text">9. 奇偶路由是什么意思？</span></a></li></ol></li></ol>
+          <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB"><span class="toc-number">1.</span> <span class="toc-text">一、论文阅读</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%97%B6%E9%97%B4%E7%82%B9%EF%BC%9A%E8%BF%99%E9%A1%B9%E6%8A%80%E6%9C%AF%E6%98%AF%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E6%8F%90%E5%87%BA%E7%9A%84%EF%BC%9F"><span class="toc-number">1.1.</span> <span class="toc-text">1. 时间点：这项技术是什么时候提出的？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E9%81%87%E5%88%B0%E4%BA%86%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="toc-number">1.2.</span> <span class="toc-text">2. 生产环境遇到了什么问题？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-TGW-%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E8%BF%99%E4%BA%9B%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="toc-number">1.3.</span> <span class="toc-text">3. TGW 如何解决这些问题？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84"><span class="toc-number">1.4.</span> <span class="toc-text">4. 整体架构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1-%E7%AB%AF%E5%88%B0%E7%AB%AF%E6%B5%81%E7%A8%8B%EF%BC%88Life-of-a-Request%EF%BC%89"><span class="toc-number">1.4.1.</span> <span class="toc-text">4.1 端到端流程（Life of a Request）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%85%B3%E9%94%AE%E6%9C%BA%E5%88%B6"><span class="toc-number">1.5.</span> <span class="toc-text">5. 关键机制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#5-1-%E7%8A%B6%E6%80%81%E8%BF%81%E7%A7%BB"><span class="toc-number">1.5.1.</span> <span class="toc-text">5.1 状态迁移</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-2-%E6%95%85%E9%9A%9C%E9%9F%A7%E6%80%A7"><span class="toc-number">1.5.2.</span> <span class="toc-text">5.2 故障韧性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-3-%E6%95%85%E9%9A%9C%E6%A3%80%E6%B5%8B%E4%B8%8E%E5%AE%9A%E4%BD%8D"><span class="toc-number">1.5.3.</span> <span class="toc-text">5.3 故障检测与定位</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-4-%E8%BF%90%E7%BB%B4%E7%BB%8F%E9%AA%8C"><span class="toc-number">1.5.4.</span> <span class="toc-text">5.4 运维经验</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E4%BB%A3%E5%85%A5%E4%B8%80%E4%B8%AA%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E5%9C%BA%E6%99%AF"><span class="toc-number">1.6.</span> <span class="toc-text">6. 代入一个系统设计场景</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#6-1-%E8%A7%A3%E5%86%B3%E4%BB%80%E4%B9%88-workload%EF%BC%9F"><span class="toc-number">1.6.1.</span> <span class="toc-text">6.1 解决什么 workload？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-2-%E6%8F%90%E4%BE%9B%E4%BB%80%E4%B9%88-consistency%EF%BC%9F"><span class="toc-number">1.6.2.</span> <span class="toc-text">6.2 提供什么 consistency？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-3-%E6%95%85%E9%9A%9C%E5%A6%82%E4%BD%95%E6%81%A2%E5%A4%8D%EF%BC%9F"><span class="toc-number">1.6.3.</span> <span class="toc-text">6.3 故障如何恢复？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-4-%E8%A7%84%E6%A8%A1%E4%B8%8A%E9%99%90%E5%9C%A8%E5%93%AA%E9%87%8C%EF%BC%9F"><span class="toc-number">1.6.4.</span> <span class="toc-text">6.4 规模上限在哪里？</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E5%90%8E%E7%BB%AD%E6%BC%94%E8%BF%9B%E6%96%B9%E5%90%91%E4%B8%8E%E5%8F%96%E8%88%8D"><span class="toc-number">1.7.</span> <span class="toc-text">7. 后续演进方向与取舍</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%BD%91%E5%85%B3%E7%9F%A5%E8%AF%86%E4%B8%8E%E6%80%9D%E8%80%83%E9%A2%98"><span class="toc-number">2.</span> <span class="toc-text">二、网关知识与思考题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%BB%80%E4%B9%88%E6%98%AF%E2%80%9C%E7%8A%B6%E6%80%81%E2%80%9D%EF%BC%9F"><span class="toc-number">2.1.</span> <span class="toc-text">1. 什么是“状态”？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Pipeline-%E7%9A%84%E5%BF%85%E8%A6%81%E6%80%A7"><span class="toc-number">2.2.</span> <span class="toc-text">2. Pipeline 的必要性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-90-%E5%88%87%E6%B5%81%E7%9A%84%E5%AE%89%E5%85%A8%E6%80%A7"><span class="toc-number">2.3.</span> <span class="toc-text">3. 90% 切流的安全性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%BF%AB%E9%80%9F%E6%94%B6%E6%95%9B%E7%9A%84%E5%85%B3%E9%94%AE%E5%AD%97%E6%AE%B5"><span class="toc-number">2.4.</span> <span class="toc-text">4. 快速收敛的关键字段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E9%80%89%E6%8B%A9%E6%80%A7%E5%90%8C%E6%AD%A5%E7%9A%84%E4%BB%A3%E4%BB%B7"><span class="toc-number">2.5.</span> <span class="toc-text">5. 选择性同步的代价</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E5%88%86%E6%95%A3%E5%BC%8F%E8%BF%81%E7%A7%BB%E7%9A%84%E5%A4%B1%E6%95%88%E6%9D%A1%E4%BB%B6"><span class="toc-number">2.6.</span> <span class="toc-text">6. 分散式迁移的失效条件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E5%AE%9A%E4%BD%8D%E8%AF%81%E6%8D%AE%E6%98%AF%E5%90%A6%E5%85%85%E5%88%86%EF%BC%9F"><span class="toc-number">2.7.</span> <span class="toc-text">7. 定位证据是否充分？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-%E7%BD%91%E5%85%B3%E6%81%A2%E5%A4%8D%E4%B8%8E%E4%B8%9A%E5%8A%A1%E6%81%A2%E5%A4%8D"><span class="toc-number">2.8.</span> <span class="toc-text">8. 网关恢复与业务恢复</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-%E5%A5%87%E5%81%B6%E8%B7%AF%E7%94%B1%E6%98%AF%E4%BB%80%E4%B9%88%E6%84%8F%E6%80%9D%EF%BC%9F"><span class="toc-number">2.9.</span> <span class="toc-text">9. 奇偶路由是什么意思？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-%E4%BB%8E%E8%BF%90%E7%BB%B4%E7%BB%8F%E9%AA%8C%E5%8F%AF%E4%BB%A5%E5%AD%A6%E5%88%B0%E4%BB%80%E4%B9%88"><span class="toc-number">2.10.</span> <span class="toc-text">10. 从运维经验可以学到什么</span></a></li></ol></li></ol>
       </div>
     
   <div class="content">
@@ -246,13 +246,13 @@
 <li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/2523024">腾讯云团队的技术介绍</a></li>
 </ul>
 <p>文中的 TGW 指 <strong>Tencent Gateway</strong>。LD（Load Distributor）是转发节点；RS 指后端服务器；VIP 是对外提供服务的虚拟 IP。</p>
-<h2 id="一、论文阅读"><a href="#一、论文阅读" class="headerlink" title="一、论文阅读"></a>一、论文阅读</h2><h3 id="1-时间点：这项技术是什么时候提出的？"><a href="#1-时间点：这项技术是什么时候提出的？" class="headerlink" title="1. 时间点：这项技术是什么时候提出的？"></a>1. 时间点：这项技术是什么时候提出的？</h3><p>论文发表于 <strong>2025 年 USENIX ATC</strong>，实际时间很早，TGW是对数据中心网关的另一种解决方案。</p>
-<h3 id="2-生产环境遇到了什么问题？"><a href="#2-生产环境遇到了什么问题？" class="headerlink" title="2. 生产环境遇到了什么问题？"></a>2. 生产环境遇到了什么问题？</h3><p><strong>网络游戏和直播场景</strong>对低时延、低抖动、低丢包有严格要求，服务器入口处的网关首先就要满足这些要求。</p>
+<h2 id="一、论文阅读"><a href="#一、论文阅读" class="headerlink" title="一、论文阅读"></a>一、论文阅读</h2><h3 id="1-时间点：这项技术是什么时候提出的？"><a href="#1-时间点：这项技术是什么时候提出的？" class="headerlink" title="1. 时间点：这项技术是什么时候提出的？"></a>1. 时间点：这项技术是什么时候提出的？</h3><p>论文发表于 <strong>2025 年 USENIX ATC</strong>，实际投入生产时间是2017年，。</p>
+<h3 id="2-生产环境遇到了什么问题？"><a href="#2-生产环境遇到了什么问题？" class="headerlink" title="2. 生产环境遇到了什么问题？"></a>2. 生产环境遇到了什么问题？</h3><p>网络游戏和直播场景对<strong>低时延、低抖动、低丢包</strong>有严格要求，服务器入口处的网关首先就要满足这些要求。</p>
 <p>与此同时，网关面临流量增长、单核热点、海量连接状态、在线扩缩容和设备故障等问题。</p>
 <h3 id="3-TGW-如何解决这些问题？"><a href="#3-TGW-如何解决这些问题？" class="headerlink" title="3. TGW 如何解决这些问题？"></a>3. TGW 如何解决这些问题？</h3><p><strong>高效报文处理</strong>：基于 DPDK 实现高性能转发。</p>
 <ul>
 <li><strong>RTC（Run-to-Completion）</strong>：无状态的 TGW-EIP 采用 RTC 模型处理报文。</li>
-<li><strong>Pipeline</strong>：有状态的 TGW-CLB 采用 Pipeline 模型，将报文分发和处理分开。</li>
+<li><strong>Pipeline</strong>：有状态的 TGW-CLB 采用 RTC + Pipeline 模型，将报文分发和处理分开。</li>
 </ul>
 <p><strong>可扩展的状态管理</strong>：通过在线状态迁移应对流量突发、大象流和集群调整，尽量保持服务连续性。</p>
 <p><strong>快速故障恢复</strong>：通过会话同步与冗余部署提高故障韧性，维持服务可用性。</p>
@@ -264,14 +264,38 @@
 <li><strong>辅助组件</strong>：路由发布（BGP+ECMP路由）、探针（故障检测）和代理（日志聚合）。</li>
 </ul>
 <p>在部署模式，针对不同的云网络功能，TGW的集群部署在云网络的不同位置中：</p>
-<p>TGW-EIP部署在区域入口，TGW-CLB部署在可用区（AZ）内。</p>
+<p>TGW-EIP部署在区域（Region）入口，TGW-CLB部署在可用区（AZ）内。</p>
 <h4 id="4-1-端到端流程（Life-of-a-Request）"><a href="#4-1-端到端流程（Life-of-a-Request）" class="headerlink" title="4.1 端到端流程（Life of a Request）"></a>4.1 端到端流程（Life of a Request）</h4><p><img src="/2026/09/27/tgw-atc-2025-notes/tgw-life-of-a-request.png" alt="TGW 入站报文处理流程" loading="lazy"></p>
 <p>工作流程（以入向流量为例）：</p>
 <ol>
 <li><strong>TGW-EIP</strong>：流量通过 BGP 路由引流，经汇聚路由器、接入路由器通过 ECMP 进入 TGW-EIP 集群的各转发节点，由转发节点进行 NAT 和隧道封装。TGW-EIP 集群的后端服务器，可能为弹性的虚拟机，也可以是由 TGW-CLB 集群承载的内网 CLB 实例。</li>
 <li><strong>TGW-CLB</strong>：TGW-CLB 基于服务标识符（如 IP 对或 QUIC 连接 ID）分发流量到后端服务器，执行有状态的路由转发。发往后端的报文同样采用 GRE 隧道封装。为了确保同一连接或同一 VIP 的流量与转发节点的亲和性，上游路由器中配置了奇偶路由的策略。</li>
 </ol>
-<h3 id="5-关键机制"><a href="#5-关键机制" class="headerlink" title="5. 关键机制"></a>5. 关键机制</h3><h4 id="5-1-状态迁移"><a href="#5-1-状态迁移" class="headerlink" title="5.1 状态迁移"></a>5.1 状态迁移</h4><p>一个典型场景是：<strong>将流量从较小的集群迁移到较大的集群，以应对流量突发或大象流。</strong></p>
+<table>
+<thead>
+<tr>
+<th>部分</th>
+<th>图中的内容</th>
+<th>谁使用、有什么用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Outer IP header</td>
+<td><code>CTgwIP → HostIP2</code></td>
+<td>底层网络据此把包送到 Host2</td>
+</tr>
+<tr>
+<td>GRE header</td>
+<td>图中标注 <code>VPCid、DIP</code></td>
+<td>隧道接收端获得租户、目标 VM 等上下文</td>
+</tr>
+<tr>
+<td>Inner header</td>
+<td><code>CIP → VIP</code>，<code>CPort → DPort</code></td>
+<td>被封装的业务报文头，保留客户端和服务的信息</td>
+</tr>
+</tbody></table>
+<h3 id="5-关键机制"><a href="#5-关键机制" class="headerlink" title="5. 关键机制"></a>5. 关键机制</h3><h4 id="5-1-状态迁移"><a href="#5-1-状态迁移" class="headerlink" title="5.1 状态迁移"></a>5.1 状态迁移</h4><p>一个典型场景是：<strong>将流量从较小的集群迁移到较大的集群，以应对流量突发或大象流，或者单纯业务增长。</strong></p>
 <ol>
 <li><strong>在线迁移</strong>：在重定向流量之前，先将旧集群中保存的连接信息转移到新集群。</li>
 <li><strong>大部分状态迁移完成后切流</strong>：迁移约 90% 的状态后，新集群就可以通过 BGP 宣告 VIP 路由。</li>
@@ -280,13 +304,17 @@
 <li><strong>状态聚合</strong>：以 VIP 为粒度管理迁移状态。</li>
 </ol>
 <p>90% 并不是“剩余状态可以直接丢弃”的意思。迁移期间仍需要旧集群代理，维持原来的后端选择。</p>
-<h4 id="5-2-故障韧性"><a href="#5-2-故障韧性" class="headerlink" title="5.2 故障韧性"></a>5.2 故障韧性</h4><p><strong>状态同步</strong>采用选择性、批量的方式：</p>
+<h4 id="5-2-故障韧性"><a href="#5-2-故障韧性" class="headerlink" title="5.2 故障韧性"></a>5.2 故障韧性</h4><ol>
+<li><strong>集群内</strong>：状态同步采用选择性、批量的方式：</li>
+</ol>
 <ul>
 <li>优先同步存活超过 3 秒的连接；3 秒是工作负载下的经验选择。</li>
 <li>使用 UDP 批量发送，减少同步报文数量；批次达到 MTU 或达到超时条件时发送，并非一直等到攒满 MTU。</li>
 <li>避免为大量短连接承担额外同步开销，同时接受未备份连接的恢复风险。</li>
 </ul>
-<p><strong>容错模型</strong>分为三个层次：</p>
+<ol start="3">
+<li><strong>多级容错模型</strong>：</li>
+</ol>
 <table>
 <thead>
 <tr>
@@ -298,7 +326,7 @@
 <tbody><tr>
 <td>可用区内</td>
 <td>Active-Active</td>
-<td>LD 以双活方式工作，故障后由其他节点接管</td>
+<td>依赖状态同步，LD 以双活方式工作，故障后由其他节点接管</td>
 </tr>
 <tr>
 <td>可用区间</td>
@@ -429,6 +457,34 @@
 <h3 id="8-网关恢复与业务恢复"><a href="#8-网关恢复与业务恢复" class="headerlink" title="8. 网关恢复与业务恢复"></a>8. 网关恢复与业务恢复</h3><p>LD 故障后，新 LD 已恢复原来的五元组到后端的映射，但后端游戏进程同时重启了。为什么玩家仍可能掉线？需要在哪一层补充能力？</p>
 <p>这里需要分别考虑 <strong>传输连接恢复、应用会话恢复、业务状态恢复</strong>。恢复网关映射，不等于恢复 TCP 端点状态，更不等于恢复游戏进程中的业务状态。</p>
 <h3 id="9-奇偶路由是什么意思？"><a href="#9-奇偶路由是什么意思？" class="headerlink" title="9. 奇偶路由是什么意思？"></a>9. 奇偶路由是什么意思？</h3><p>数据包先通过核心路由器再通过接入路由器，TGW前面有多个接入路由器，对于分片的数据包，如果都按IP对做ECMP，也不天然保证选择结果相同。为了让所有分片都进入同一个接入路由器，需要使用奇偶路由。（这里其实有疑问，交代的不清楚，即便是奇偶路由，如何在奇数路由器中进行选择也是问题，奇数路由器可能包含多个）</p>
+<h3 id="10-从运维经验可以学到什么"><a href="#10-从运维经验可以学到什么" class="headerlink" title="10. 从运维经验可以学到什么"></a>10. 从运维经验可以学到什么</h3><ol>
+<li><strong>故障域隔离</strong>：不要让局域故障扩散；<ul>
+<li>region\az\集群分层解耦，控制与调度按地域划分；</li>
+<li>将业务分散到不同集群、限制单次故障影响到vip范围；</li>
+<li>对会触发网关崩溃的一场流量，分散迁移；</li>
+</ul>
+</li>
+<li><strong>冗余</strong>：不仅有备用，还要能接得住；<ul>
+<li>多层冗余：az、机架、机器、网卡&#x2F;光纤多层冗余；</li>
+<li>集群节点跨机架部署，az之间互为备份；</li>
+<li>剩余资源必须能够承载故障后的全部流量；</li>
+</ul>
+</li>
+<li><strong>集群管理</strong>：安全上线、在线调整、可控退出；</li>
+</ol>
+<ul>
+<li>新集群先进行无流量配置检查，再引入地址并持续探测。</li>
+<li>流量增长时，通过迁移流量扩容。</li>
+<li>缩容或维护时，先隔离路由，再释放资源。</li>
+<li>避免频繁切换 CPU C-State 带来处理延迟和抖动。</li>
+</ul>
+<ol start="4">
+<li><strong>协议优化</strong>：降低复杂度，保证报文落点一致</li>
+</ol>
+<ul>
+<li>状态同步改为单播；</li>
+<li>奇偶路由；</li>
+</ul>
 </div>
         
           <div class="post-copyright">
