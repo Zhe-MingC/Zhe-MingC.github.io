@@ -10,7 +10,7 @@
   <rights>All rights reserved 2026, Zhe-MingC</rights>
   <subtitle>聚焦后端/DPDK/Linux/网络编程/云原生</subtitle>
   <title>Tim Chen的技术成长记录</title>
-  <updated>2026-09-27T13:46:58.000Z</updated>
+  <updated>2026-09-28T03:19:47.000Z</updated>
   <entry>
     <author>
       <name>Zhe-MingC</name>
@@ -24,7 +24,7 @@
     <published>2026-09-24T12:35:00.000Z</published>
     <summary>从游戏和直播的网关需求出发，整理 TGW 的报文处理、在线状态迁移、故障恢复与定位机制，以及连接状态和业务恢复的边界。</summary>
     <title>TGW 论文阅读笔记：高性能转发、状态迁移与故障恢复</title>
-    <updated>2026-09-27T13:46:58.000Z</updated>
+    <updated>2026-09-28T03:19:47.000Z</updated>
   </entry>
   <entry>
     <author>
