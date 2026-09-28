@@ -26,7 +26,7 @@
 
   
 
-  <title>深入浅出DPDK总结 | Tim Chen的技术成长记录</title>
+  <title>DPDK vs 内核协议栈 | Tim Chen的技术成长记录</title>
 
   
 
@@ -200,7 +200,7 @@
 
     
 <article id="post">
-  <div class="post-title">深入浅出DPDK总结</div>
+  <div class="post-title">DPDK vs 内核协议栈</div>
   
 <div class="post-meta">
     
@@ -209,7 +209,7 @@
         <span title="发表于 2025.08.24"><i class="far fa-calendar-alt"></i> 2025.08.24</span>
       </div>
       <div class="post-meta-item updated">
-        <span title="更新于 2026.09.27"><i class="far fa-calendar-check"></i> 2026.09.27</span>
+        <span title="更新于 2026.09.29"><i class="far fa-calendar-check"></i> 2026.09.29</span>
       </div>
      
     
@@ -222,10 +222,10 @@
     
      <div class="post-meta-item wordcount">
         
-          <i class="fas fa-pencil-alt"></i> <span class="post-count">14 字</span>
+          <i class="fas fa-pencil-alt"></i> <span class="post-count">911 字</span>
            
         
-          <i class="far fa-clock"></i> <span class="post-count">1 分钟</span>
+          <i class="far fa-clock"></i> <span class="post-count">3 分钟</span>
                                
       </div>
      
@@ -233,9 +233,108 @@
 
 
   
+    <div id="toc" class="toc">
+          <h1>目录</h1>
+          <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81DPDK-%E7%9C%81%E6%8E%89%E4%BA%86%E5%93%AA%E4%BA%9B%E5%BC%80%E9%94%80%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">一、DPDK 省掉了哪些开销？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81DPDK-%E4%BB%8E%E5%93%AA%E4%BA%9B%E8%A7%92%E5%BA%A6%E4%BC%98%E5%8C%96%EF%BC%9F"><span class="toc-number">2.</span> <span class="toc-text">二、DPDK 从哪些角度优化？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81NAPI-vs-DPDK-rx-burst"><span class="toc-number">3.</span> <span class="toc-text">三、NAPI vs DPDK rx_burst</span></a></li></ol>
+      </div>
+    
   <div class="content">
-        <div><h1 id="Linux内核网络协议栈-vs-DPDK"><a href="#Linux内核网络协议栈-vs-DPDK" class="headerlink" title="Linux内核网络协议栈 vs DPDK"></a>Linux内核网络协议栈 vs DPDK</h1><p><img src="/2025/08/16/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BADPDK%E7%AC%94%E8%AE%B0/Linux-netsatck-vs-dpdk.png" alt="Linux协议栈与DPDK对比" loading="lazy"></p>
-<h1 id="Cache和内存"><a href="#Cache和内存" class="headerlink" title="Cache和内存"></a>Cache和内存</h1></div>
+        <div><p><strong>DPDK 的核心思路：绕过内核网络协议栈，用轮询、批处理和更可控的内存与多核模型，降低每包处理成本。</strong></p>
+<p><img src="/2025/08/16/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BADPDK%E7%AC%94%E8%AE%B0/Linux-netsatck-vs-dpdk.png" alt="Linux协议栈与DPDK对比" loading="lazy"></p>
+<p>图用于理解整体路径；DPDK 中的报文对象是 <code>mbuf</code>。以下以普通 socket 路径和 DPDK 持续轮询模式为主要比较对象。</p>
+<h2 id="一、DPDK-省掉了哪些开销？"><a href="#一、DPDK-省掉了哪些开销？" class="headerlink" title="一、DPDK 省掉了哪些开销？"></a>一、DPDK 省掉了哪些开销？</h2><table>
+<thead>
+<tr>
+<th>开销</th>
+<th>内核协议栈</th>
+<th>DPDK</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>中断与调度</td>
+<td>中断触发 NAPI，通常通过软中断处理报文</td>
+<td>CPU 主动轮询，减少收包中断和睡眠唤醒开销</td>
+</tr>
+<tr>
+<td>报文内存管理</td>
+<td>管理 <code>sk_buff</code> 和接收缓冲区，也有缓存与复用机制</td>
+<td><code>mempool + mbuf</code> 预分配、循环复用，配合 per-lcore cache 减少共享访问</td>
+</tr>
+<tr>
+<td>用户态&#x2F;内核态切换与拷贝</td>
+<td>普通 socket I&#x2F;O 经过系统调用，接收时通常复制到用户缓冲区</td>
+<td>应用直接处理 DMA 写入的报文缓冲区，省去这段系统调用与拷贝</td>
+</tr>
+</tbody></table>
+<p>这里的“省掉”是减少常规路径开销，并非绝对没有调度、内存管理或数据复制。<strong>内核纯转发本身也没有 socket 到用户态的拷贝。</strong> <a target="_blank" rel="noopener" href="https://doc.dpdk.org/guides-24.11/prog_guide/ethdev/ethdev.html">DPDK PMD 文档</a>。</p>
+<h2 id="二、DPDK-从哪些角度优化？"><a href="#二、DPDK-从哪些角度优化？" class="headerlink" title="二、DPDK 从哪些角度优化？"></a>二、DPDK 从哪些角度优化？</h2><table>
+<thead>
+<tr>
+<th>角度</th>
+<th>主要手段</th>
+<th>核心思路</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>并发与调度</td>
+<td>Poll mode、per-core&#x2F;per-queue、lockless ring、RTC（同核完成收包、处理和发送提交）</td>
+<td>尽量不共享，减少锁竞争、跨核交接和调度开销</td>
+</tr>
+<tr>
+<td>批处理</td>
+<td>Burst processing、SIMD、mempool bulk get&#x2F;put</td>
+<td>一次处理更多数据，摊薄固定开销；SIMD 进一步提高并行计算效率</td>
+</tr>
+<tr>
+<td>内存与缓存</td>
+<td>Hugepage、NUMA 感知、预分配、per-lcore cache、cacheline 对齐、prefetch</td>
+<td>减少地址翻译和远端访存，让数据更靠近 CPU、提前到达，并减少核心间干扰</td>
+</tr>
+<tr>
+<td>I&#x2F;O 与硬件</td>
+<td>Kernel bypass（常见通过 VFIO&#x2F;UIO）、少拷贝、RSS&#x2F;Flow Director&#x2F;checksum offload、平台 DDIO</td>
+<td>缩短软件路径，减少数据搬运，把适合的工作交给硬件</td>
+</tr>
+</tbody></table>
+<p>这些手段需要结合驱动和硬件使用；RSS、校验和卸载、DDIO 等也能用于内核路径，并非 DPDK 独有。<a target="_blank" rel="noopener" href="https://doc.dpdk.org/guides-24.11/prog_guide/writing_efficient_code.html">DPDK 性能编程指南</a>。</p>
+<h2 id="三、NAPI-vs-DPDK-rx-burst"><a href="#三、NAPI-vs-DPDK-rx-burst" class="headerlink" title="三、NAPI vs DPDK rx_burst"></a>三、NAPI vs DPDK rx_burst</h2><p><strong>NAPI 本身也会轮询、批量处理。主要区别在于谁驱动轮询，以及何时让出 CPU。</strong></p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>常规 Linux NAPI</th>
+<th>DPDK 持续轮询</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>触发方式</td>
+<td>硬中断 → 调度 NAPI → poll，轮询期间通常屏蔽对应中断</td>
+<td>应用循环调用 <code>rx_burst</code>，不依赖收包中断唤醒</td>
+</tr>
+<tr>
+<td>批量上限</td>
+<td>单次 poll 受 budget 限制，整体还受包数和时间预算限制</td>
+<td>应用指定上限，如 32；返回实际数量，不等待凑满</td>
+</tr>
+<tr>
+<td>CPU 消耗</td>
+<td>空闲时通常停止轮询，CPU 可处理其他工作或休眠</td>
+<td>持续忙轮询通常占满一个逻辑 CPU，无包时也在空转</td>
+</tr>
+<tr>
+<td>延迟</td>
+<td>受中断合并、调度、排队和协议处理影响</td>
+<td>减少中断路径，但仍受轮询间隔、业务处理和排队影响</td>
+</tr>
+<tr>
+<td>退出与后续处理</td>
+<td>budget 用完但仍有工作时继续安排轮询；完成后通常恢复中断</td>
+<td>本次调用达到上限或没有更多报文即返回；外层循环决定是否继续</td>
+</tr>
+</tbody></table>
+<p>不能统一写成“内核 μs 级、DPDK ns 级”，具体延迟取决于硬件、负载和测量范围。<a target="_blank" rel="noopener" href="https://docs.kernel.org/networking/napi.html">Linux NAPI 文档</a>。</p>
+<p><strong>本质上，DPDK 以专用 CPU、预分配内存和更多应用侧管理责任，换取更高效率和更可控的处理路径。</strong> 它提供高性能报文 I&#x2F;O，应用需要的完整协议功能仍须另外实现。</p>
+</div>
         
           <div class="post-copyright">
                   <div class="copyright-item">

@@ -35,9 +35,9 @@
     <id>https://zhe-mingc.github.io/2025/08/16/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BADPDK%E7%AC%94%E8%AE%B0/</id>
     <link href="https://zhe-mingc.github.io/2025/08/16/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BADPDK%E7%AC%94%E8%AE%B0/"/>
     <published>2025-08-24T15:32:43.000Z</published>
-    <summary>《深入浅出DPDK》快速总结</summary>
-    <title>深入浅出DPDK总结</title>
-    <updated>2026-09-27T08:13:57.331Z</updated>
+    <summary>简要对比 DPDK 与内核协议栈的开销、优化手段，以及 NAPI 与轮询收包的区别。</summary>
+    <title>DPDK vs 内核协议栈</title>
+    <updated>2026-09-28T16:17:35.000Z</updated>
   </entry>
   <entry>
     <author>
