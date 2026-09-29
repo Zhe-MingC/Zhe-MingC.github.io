@@ -18,7 +18,7 @@ url: https://zhe-mingc.github.io
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:
-  trailing_index: true # Set to false to remove trailing 'index.html' from permalinks
+  trailing_index: false # Use directory URLs while keeping index.html files accessible.
   trailing_html: true # Set to false to remove trailing '.html' from permalinks
 
 # Directory
@@ -118,6 +118,12 @@ feed:
   limit: 20
   content: false
   autodiscovery: false
+
+# Public pages for search engines; individual pages can opt out with sitemap: false.
+sitemap:
+  path: sitemap.xml
+  tags: true
+  categories: true
 
 # Extensions
 ## Plugins: https://hexo.io/plugins/

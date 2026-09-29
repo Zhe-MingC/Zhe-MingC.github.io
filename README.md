@@ -79,6 +79,9 @@ npm run deploy
 - 留言页使用已有公开邮箱，目前没有在线评论服务。Valine 和打赏保持关闭，配置完成后再启用。
 - RSS 由 `hexo-generator-feed` 生成到 `/atom.xml`；主题负责提供订阅链接。
 - 搜索在浏览器中读取 `/search.xml`，不需要后端服务。
+- 网站地图由 `hexo-generator-sitemap` 生成到 `/sitemap.xml`，并通过 `/robots.txt` 声明。发布后可在 Google Search Console 中提交 `sitemap.xml`。
+- 不希望列入网站地图的文章或页面可在 front matter 中设置 `sitemap: false`；这仅控制网站地图列表，不会禁止 Google 收录。默认示例文章、搜索页和空白“说说”页已排除。
+- 页面摘要优先使用 front matter 的 `description`，未填写时使用站点介绍；`canonical` 与网站地图使用同一站点地址和固定网址，目录网址省略 `index.html`。
 - 搜索索引使用 `templates/search.xml`，统一处理固定网址的前导斜杠，避免把文章路径误生成为 `//2025/...` 这样的外站地址。
 - “说说”页面目前为空，导航入口暂时隐藏；补充内容后可在主题配置中开启。
 

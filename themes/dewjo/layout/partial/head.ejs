@@ -13,8 +13,12 @@
   <% if(config.subtitle){ %>
       <meta name="subtitle" content="<%- config.subtitle %>">
   <% } %>
-  <% if(config.description){ %>
-      <meta name="description" content="<%= config.description %>">
+  <% var description = page.description || config.description; %>
+  <% if(description){ %>
+      <meta name="description" content="<%= strip_html(description).replace(/\s+/g, ' ').trim() %>">
+  <% } %>
+  <% if (page.path !== '404.html') { %>
+      <link rel="canonical" href="<%= full_url_for(page.path || '') %>">
   <% } %>
   <% if(config.keywords){ %>
       <meta name="keywords" content="<%= page.keywords %>,<%- config.keywords %>">
