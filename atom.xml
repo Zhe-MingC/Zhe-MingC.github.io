@@ -10,7 +10,28 @@
   <rights>All rights reserved 2026, Zhe-MingC</rights>
   <subtitle>聚焦后端/DPDK/Linux/网络编程/云原生</subtitle>
   <title>Tim Chen的技术成长记录</title>
-  <updated>2026-09-28T03:19:47.000Z</updated>
+  <updated>2026-10-11T06:53:00.536Z</updated>
+  <entry>
+    <author>
+      <name>Zhe-MingC</name>
+    </author>
+    <category term="软件工程" scheme="https://zhe-mingc.github.io/categories/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/"/>
+    <id>https://zhe-mingc.github.io/2026/10/11/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E7%9A%84%E5%93%B2%E5%AD%A6/</id>
+    <link href="https://zhe-mingc.github.io/2026/10/11/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E7%9A%84%E5%93%B2%E5%AD%A6/"/>
+    <published>2026-10-11T06:05:53.000Z</published>
+    <summary>
+      <![CDATA[<blockquote>
+<p>这本书就是关于如何使用复杂性来指导软件设计的整个生命周期。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th><strong>日期</strong></th>
+<th><strong>学习内容</strong><]]>
+    </summary>
+    <title>软件设计的哲学</title>
+    <updated>2026-10-11T06:53:00.536Z</updated>
+  </entry>
   <entry>
     <author>
       <name>Zhe-MingC</name>
