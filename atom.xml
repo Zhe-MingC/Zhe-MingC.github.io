@@ -10,7 +10,7 @@
   <rights>All rights reserved 2026, Zhe-MingC</rights>
   <subtitle>聚焦后端/DPDK/Linux/网络编程/云原生</subtitle>
   <title>Tim Chen的技术成长记录</title>
-  <updated>2026-10-11T06:53:00.536Z</updated>
+  <updated>2026-10-11T06:58:45.000Z</updated>
   <entry>
     <author>
       <name>Zhe-MingC</name>
@@ -30,7 +30,22 @@
 <th><strong>学习内容</strong><]]>
     </summary>
     <title>软件设计的哲学</title>
-    <updated>2026-10-11T06:53:00.536Z</updated>
+    <updated>2026-10-11T06:58:45.000Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>Zhe-MingC</name>
+    </author>
+    <category term="负载均衡" scheme="https://zhe-mingc.github.io/categories/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/"/>
+    <category term="论文阅读" scheme="https://zhe-mingc.github.io/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/"/>
+    <category term="Maglev" scheme="https://zhe-mingc.github.io/tags/Maglev/"/>
+    <category term="一致性哈希" scheme="https://zhe-mingc.github.io/tags/%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C/"/>
+    <id>https://zhe-mingc.github.io/2026/10/11/maglev-nsdi-2016-notes/</id>
+    <link href="https://zhe-mingc.github.io/2026/10/11/maglev-nsdi-2016-notes/"/>
+    <published>2026-10-10T16:00:00.000Z</published>
+    <summary>从生产问题出发，整理 Maglev 的软件负载均衡架构、转发优化、一致性哈希、连接跟踪及故障恢复边界。</summary>
+    <title>Maglev 论文阅读笔记：高性能转发、一致性哈希与连接亲和性</title>
+    <updated>2026-10-23T16:00:00.000Z</updated>
   </entry>
   <entry>
     <author>
@@ -71,7 +86,7 @@
     <published>2025-08-16T03:52:09.000Z</published>
     <summary>描述我创办这个博客的理由</summary>
     <title>我的第一篇博客</title>
-    <updated>2025-08-16T09:12:41.785Z</updated>
+    <updated>2026-10-11T06:58:45.000Z</updated>
   </entry>
   <entry>
     <author>
@@ -85,6 +100,6 @@
       <![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for]]>
     </summary>
     <title>Hello World</title>
-    <updated>2026-09-29T02:08:41.304Z</updated>
+    <updated>2026-10-11T06:58:45.000Z</updated>
   </entry>
 </feed>
