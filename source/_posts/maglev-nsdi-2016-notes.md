@@ -1,7 +1,7 @@
 ---
 title: Maglev 论文阅读笔记：高性能转发、一致性哈希与连接亲和性
 date: 2026-10-11 00:00:00
-updated: 2026-10-24 00:00:00
+updated: 2026-10-25 00:00:00
 categories:
   - 负载均衡
 tags:
@@ -195,17 +195,26 @@ description: 从生产问题出发，整理 Maglev 的软件负载均衡架构�
         ```
 
     2. 隧道：关键是把**服务地址**和**具体机器的位置地址**分开
-15. Maglev 通过哈希、TGW-CLB 通过会话同步应对节点变化，Katran、GitHub GLB、NGINX、HAProxy 又是怎么做高可用的？
+15. Maglev 通过 hash、TGW 通过会话同步在集群节点变化时尽可能找到同一个 RS，Katran、GitHub GLB、NGINX、HAProxy 怎么做的高可用？
 
-    1. **Katran / GitHub GLB**：Katran 类似 Maglev，优先使用本地会话映射，未命中时通过哈希选后端。GLB Director 使用 Rendezvous 哈希变体生成 primary/secondary，并配合 second chance：当前 primary 不认识的已有连接报文，可以转给仍持有该连接的 secondary。它不只是普通的哈希分流。[Katran](https://github.com/facebookincubator/katran)、[GLB second chance](https://github.com/github/glb-director/blob/master/docs/development/second-chance-design.md)。
+    1. **Katran / GitHub GLB**：类似 Maglev，用 hash 的方法。
 
-    2. **Director 与 Proxy 的连接模型**：Maglev 等转发型 Director 不终止业务 TCP，转发的是 Client 与 RS 之间的端到端连接报文；NGINX/HAProxy 作为完整代理时，分别与 Client 和 Server 建立独立 TCP 连接。每条 TCP 本身都是双向的，两侧连接还可能通过连接池复用，不一定一一对应。
+    2. **Proxy 模型 vs Director 模型**：NGINX/HAProxy 与 Maglev/TGW/Katran/GitHub GLB 不同，Maglev 等都是 Director，始终维护的是一条 TCP 流；NGINX 和 HAProxy 是 Proxy，维护了到 client 和 server 的两个 TCP 流。
 
-    3. 两类组件的侧重点不同：
-        1. **NGINX/HAProxy（Proxy）**：HTTP 模式下，按域名、URL、Header 做应用层路由，也可以终止 TLS、集中管理证书和安全策略。它们是业务请求链路中的基础设施，把通用处理从业务 service 中抽出来，简化业务实现。
-        2. **Maglev/Katran/TGW-CLB/GLB Director**：侧重四层分流和报文转发，通常不解析七层业务语义。负载均衡是核心职责；NAT、隧道封装、DSR 是不同的转发机制，不能把这些系统都理解成“主要做 NAT 的交换机”。
+    3. 这里是由于他们的职责不一样：
+        1. **NGINX/HAProxy（Proxy）**：
+            1. HTTP 模式下，按域名、URL、Header 对请求做不同处理，终止 TLS，集中管理证书和安全策略等应用层操作。关注应用层的细分处理，是应用层路由，实际上是业务的一部分，只是作为 infra service，能够简化业务 service 的实现。
+        2. **Maglev/Katran/TGW/GLB（Director）**：
+            1. 数据中心入口网关，通常是做 NAT/tunnel/DSR，然后转发数据包，还是一条 TCP 流，提供负载均衡，控制到不同 RS（一般是业务 service，可能前端有个 NGINX）的负载。功能上来说，业务把它视为一个有负载均衡功能的交换机就可以，和他们本身的七层业务无关。
 
-    4. 需要区分**服务可用性**、**连接连续性**和**业务操作恢复**：
-        1. **服务可用性**：故障后，健康实例还能接受新连接和请求。冗余部署只是基础，还需要故障检测、流量切换、正确的配置和足够的接管容量。业务上的“无状态”也不代表没有运行状态：Proxy 仍持有 TCP/TLS、请求上下文和缓冲数据；Director 则可能保存转发映射，也可能像 GLB Director 一样不保存逐流状态。
-        2. **Proxy 故障**：常规部署中，突然宕机实例上的已有连接通常需要重建。多实例配合前置 LB 或 VIP 接管，使新连接可以进入健康代理。客户端自动重连不一定需要用户手动操作或重新登录；打车记录、购物车等业务状态由业务存储保障，而进行中的操作还需要按语义设计重试、幂等或续传。平滑 reload/drain 依赖旧进程仍存活，不能等同于突然宕机后的连接接管。[NGINX HA](https://docs.nginx.com/nginx/admin-guide/high-availability/ha-keepalived/)、[平滑 reload](https://nginx.org/en/docs/control.html#reconfiguration)。
-        3. **Director 故障或上下线**：下一跳变化可能让已有连接到达另一台 Director。只要它能恢复或重算正确的转发关系，原 Client 和 RS 的 TCP 状态又仍然存活，连接就有机会继续。Maglev/Katran 依赖一致的哈希选择，TGW-CLB 依赖已同步的转发状态；这些机制都有配置、同步时机和故障范围的边界。保持 TCP 不断并不等于切换期间零丢包、零重传或零时延波动，也不能据此断言所有云平台都能无感切换。故障归因需要观测证据，不能把网关引入的中断直接归为运营商问题。[Maglev 论文 §3.3–3.4](https://www.usenix.org/sites/default/files/nsdi16-paper-eisenbud.pdf)、[TGW 论文 §6](https://www.usenix.org/system/files/atc25-yang-yifan.pdf)。
+    4. 这里有两个关注点：**连接连续性**以及**服务可用性**。
+
+        **服务可用性**：对于 Proxy/Director 来说，他们是网络组件，只是做转发，和存储不同，不用存放业务视角的“业务状态”。这里分为两个高可用：
+
+        - **业务高可用**：关注的是应用层状态，核心就是用户信息（购物车、打车记录等内容），业务数据高可用由业务 service 本身维护。
+        - **连接高可用**：由 Proxy/Director 维护，他们关注的是“连接状态”。连接高可用性通过**冗余部署以及故障检测、流量切换、正确的配置和足够的接管容量**实现，能够在单台机器 down 之后用户还能继续访问。难的是连接的连续性，以及用户重连的代价。
+
+        **连接连续性**：
+
+        1. **Proxy**：由于 Proxy 就是 TCP 的 endpoint，本身维护了完整的连接状态。**完整的 TCP 状态**包括接收到了哪些字节、ack 号、seq 号、window、缓冲区等，无法接受状态延迟同步，此时同步难度比较大，突然 down 之后只能重连。
+        2. **Director**：对于 Director 来说，他只是做中间转发，只需要知道**某个连接对应的 RS 信息**，就可以通过 hash/会话同步，维护统一的连接 → RS 映射状态。
