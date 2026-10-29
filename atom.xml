@@ -10,7 +10,21 @@
   <rights>All rights reserved 2026, Zhe-MingC</rights>
   <subtitle>聚焦后端/DPDK/Linux/网络编程/云原生</subtitle>
   <title>Tim Chen的技术成长记录</title>
-  <updated>2026-10-11T06:53:00.536Z</updated>
+  <updated>2026-10-29T16:01:11.780Z</updated>
+  <entry>
+    <author>
+      <name>Zhe-MingC</name>
+    </author>
+    <id>https://zhe-mingc.github.io/2026/10/29/dbms-relational-model-sql-basics/</id>
+    <link href="https://zhe-mingc.github.io/2026/10/29/dbms-relational-model-sql-basics/"/>
+    <published>2026-10-28T16:00:00.000Z</published>
+    <summary>
+      <![CDATA[<h1 id="前置"><a href="#前置" class="headerlink" title="前置"></a>前置</h1><ol>
+<li><p><strong>Why：为什么需要 DBMS？</strong> 文件已经可以保存数据，但当应用需要共享、查询和修改这些数]]>
+    </summary>
+    <title>数据库学习笔记</title>
+    <updated>2026-10-29T16:01:11.780Z</updated>
+  </entry>
   <entry>
     <author>
       <name>Zhe-MingC</name>
