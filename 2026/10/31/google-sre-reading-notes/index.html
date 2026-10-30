@@ -1,0 +1,794 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      <meta name="author" content="Zhe-MingC">
+  
+  
+      <meta name="subtitle" content="聚焦后端/DPDK/Linux/网络编程/云原生">
+  
+  
+  
+      <meta name="description" content="用 Why、What、How 整理 Google SRE 的原则与实践，涵盖服务水平目标、监控告警、应急响应、负载均衡、过载保护、分布式共识与数据完整性。">
+  
+  
+      <link rel="canonical" href="https://zhe-mingc.github.io/2026/10/31/google-sre-reading-notes/">
+  
+  
+  
+    <link rel="alternate" href="/atom.xml" title="Tim Chen的技术成长记录" type="application/atom+xml">
+  
+
+  
+
+  <title>Google SRE 学习笔记 | Tim Chen的技术成长记录</title>
+
+  
+
+  
+
+  
+
+  <link rel="stylesheet" href="/css/style.css" >
+  <link rel="stylesheet" href="/css/partial/dark.css" >
+
+  
+  
+  
+
+  
+    
+      <link rel="stylesheet" href="/css/partial/highlight/atom-one-light.css">
+    
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
+    
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css">
+    
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/a2396837/CDN@latest/css/iconfont.css">
+    
+  
+
+  
+    <script src="/js/todark.js"></script>
+    
+<meta name="generator" content="Hexo 7.3.0"></head>
+</html>
+
+    
+<div class="nav index" style="height: 60px;">
+    <div class="title animated fadeInDown">
+        <div class="layui-container">
+                <div class="nav-title"><a href="/" title="Tim Chen的技术成长记录">Tim Chen的技术成长记录</a></div>
+            <div class="nav-list">
+                <button> <span class=""></span><span style="display: block;"></span><span class=""></span> </button>
+                <ul class="layui-nav" lay-filter="">
+                    
+                        
+                        
+                        
+                        
+                    <li class="layui-nav-item">
+                        <a href="/search/ ">
+                            <i class=" fas fa-search-plus " style="color: rgb(3 169 244);"></i>
+                            <span class="layui-nav-item-name">搜索</span>
+                        </a>
+                    </li>
+                    
+                        
+                        
+                        
+                        
+                    <li class="layui-nav-item">
+                        <a href="/ ">
+                            <i class=" fab fa-fort-awesome " style="color: rgb(255 107 107);"></i>
+                            <span class="layui-nav-item-name">首页</span>
+                        </a>
+                    </li>
+                    
+                        
+                        
+                        
+                        
+                    <li class="layui-nav-item">
+                        <a href="/archives/ ">
+                            <i class=" fas fa-archive " style="color: rgb(10 189 227);"></i>
+                            <span class="layui-nav-item-name">归档</span>
+                        </a>
+                    </li>
+                    
+                        
+                        
+                        
+                        
+                    <li class="layui-nav-item">
+                        <a href="/tags/ ">
+                            <i class=" fas fa-hashtag " style="color: rgb(254 202 87);"></i>
+                            <span class="layui-nav-item-name">标签</span>
+                        </a>
+                    </li>
+                    
+                        
+                        
+                        
+                        
+                    <li class="layui-nav-item">
+                        <a href="/categories/ ">
+                            <i class=" far fa-folder-open " style="color: rgb(29 209 161);"></i>
+                            <span class="layui-nav-item-name">分类</span>
+                        </a>
+                    </li>
+                    
+                        
+                        
+                        
+                        
+                    <li class="layui-nav-item">
+                        <a href="/about/ ">
+                            <i class=" fab fa-grav " style="color: rgb(154 106 247);"></i>
+                            <span class="layui-nav-item-name">关于</span>
+                        </a>
+                    </li>
+                    
+                        
+                        
+                        
+                        
+                    <li class="layui-nav-item">
+                        <a href="/guestbook/ ">
+                            <i class=" fab fa-telegram " style="color: hsl(205deg 100% 50%);"></i>
+                            <span class="layui-nav-item-name">留言</span>
+                        </a>
+                    </li>
+                    
+                        
+                        
+                        
+                        
+                    <li class="layui-nav-item">
+                        <a href="/link/ ">
+                            <i class=" fab fa-weixin " style="color: hsl(152deg 73% 45%);"></i>
+                            <span class="layui-nav-item-name">友链</span>
+                        </a>
+                    </li>
+                    
+                    
+                        <li class="layui-nav-item" id="btn-toggle-dark">🌙</li>
+                    
+                    <span class="layui-nav-bar" style="left: 342px; top: 78px; width: 0px; opacity: 0;"></span>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+    
+<header class="header">
+        
+            <div class="logo">
+                    <a href="/"><img src="https://cdn.jsdelivr.net/gh/a2396837/CDN@latest/images/2020/07/27/baokemeng.webp" onerror=this.onerror=null,this.src="/img/loading.gif"></a>
+            </div>
+         
+    </div>
+     
+
+            <div class="motto">
+                <span>日拱一卒，功不唐捐</span>
+            </div>
+    
+    
+            <div class="social">
+                
+                        <a class="social-icon" href="https://github.com/Zhe-MingC" target="_blank" title="Github">
+                            <i class="iconfont icon-GitHub" aria-hidden="true"></i>
+                          </a>
+                 
+                        <a class="social-icon" href="mailto:chenmingz2001@gmail.com" target="_blank" title="Email">
+                            <i class="iconfont icon-email" aria-hidden="true"></i>
+                          </a>
+                 
+                        <a class="social-icon" href="/atom.xml" target="_blank" title="rss">
+                            <i class="iconfont icon-rss" aria-hidden="true"></i>
+                          </a>
+                 
+            </div>
+     
+</header>
+
+    
+<article id="post">
+  <div class="post-title">Google SRE 学习笔记</div>
+  
+<div class="post-meta">
+    
+    
+      <div class="post-meta-item date">
+        <span title="发表于 2026.10.31"><i class="far fa-calendar-alt"></i> 2026.10.31</span>
+      </div>
+      <div class="post-meta-item updated">
+        <span title="更新于 2026.10.31"><i class="far fa-calendar-check"></i> 2026.10.31</span>
+      </div>
+     
+    
+      <div class="post-meta-item categories">
+        
+          <i class="fas fa-inbox article-meta__icon"></i> <a href="/categories/SRE/">SRE</a>
+        
+      </div>
+     
+    
+     <div class="post-meta-item wordcount">
+        
+          <i class="fas fa-pencil-alt"></i> <span class="post-count">7.2k 字</span>
+           
+        
+          <i class="far fa-clock"></i> <span class="post-count">24 分钟</span>
+                               
+      </div>
+     
+</div>
+
+
+  
+    <div id="toc" class="toc">
+          <h1>目录</h1>
+          <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#SRE-%E7%9A%84%E6%95%B4%E4%BD%93%E8%A7%86%E8%A7%92"><span class="toc-number">1.</span> <span class="toc-text">SRE 的整体视角</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SRE-%E5%85%B3%E6%B3%A8%E5%93%AA%E4%BA%9B%E5%B7%A5%E4%BD%9C%EF%BC%9F"><span class="toc-number">1.1.</span> <span class="toc-text">SRE 关注哪些工作？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E-SRE-%E7%9A%84%E8%A7%86%E8%A7%92%E7%9C%8B-Google-%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83"><span class="toc-number">1.2.</span> <span class="toc-text">从 SRE 的视角看 Google 生产环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SRE-%E5%8E%9F%E5%88%99%E7%9A%84%E4%B8%BB%E7%BA%BF"><span class="toc-number">1.3.</span> <span class="toc-text">SRE 原则的主线</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SRE-%E7%9A%84%E5%8E%9F%E5%88%99"><span class="toc-number">2.</span> <span class="toc-text">SRE 的原则</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%A5%E6%8A%B1%E9%A3%8E%E9%99%A9"><span class="toc-number">2.1.</span> <span class="toc-text">拥抱风险</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E6%B0%B4%E5%B9%B3%E7%9B%AE%E6%A0%87%EF%BC%9ASLI%E3%80%81SLO%E3%80%81SLA"><span class="toc-number">2.2.</span> <span class="toc-text">服务水平目标：SLI、SLO、SLA</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B6%88%E9%99%A4-Toil%EF%BC%9A%E9%81%BF%E5%85%8D%E9%87%8D%E5%A4%8D%E7%9A%84%E6%89%8B%E5%8A%A8%E8%BF%90%E7%BB%B4"><span class="toc-number">2.3.</span> <span class="toc-text">消除 Toil：避免重复的手动运维</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%9B%91%E6%8E%A7"><span class="toc-number">2.4.</span> <span class="toc-text">分布式系统的监控</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96%E7%9A%84%E4%BB%B7%E5%80%BC"><span class="toc-number">2.5.</span> <span class="toc-text">自动化的价值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%91%E5%B8%83%E5%B7%A5%E7%A8%8B"><span class="toc-number">2.6.</span> <span class="toc-text">发布工程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E6%B4%81%E6%80%A7"><span class="toc-number">2.7.</span> <span class="toc-text">简洁性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SRE-%E7%9A%84%E5%AE%9E%E8%B7%B5"><span class="toc-number">3.</span> <span class="toc-text">SRE 的实践</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E6%95%B0%E6%8D%AE%E7%9A%84%E5%AE%9E%E7%94%A8%E5%91%8A%E8%AD%A6"><span class="toc-number">3.1.</span> <span class="toc-text">基于时间序列数据的实用告警</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#On-Call%EF%BC%9A%E5%80%BC%E7%8F%AD"><span class="toc-number">3.2.</span> <span class="toc-text">On-Call：值班</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94"><span class="toc-number">3.3.</span> <span class="toc-text">应急响应</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E7%AE%A1%E7%90%86"><span class="toc-number">3.4.</span> <span class="toc-text">事件管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8B%E5%90%8E%E6%96%87%E5%8C%96%EF%BC%9A%E4%BB%8E%E5%A4%B1%E8%B4%A5%E4%B8%AD%E5%AD%A6%E4%B9%A0"><span class="toc-number">3.5.</span> <span class="toc-text">事后文化：从失败中学习</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%85%E9%9A%9C%E8%B7%9F%E8%B8%AA"><span class="toc-number">3.6.</span> <span class="toc-text">故障跟踪</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%AF%E9%9D%A0%E6%80%A7%E6%B5%8B%E8%AF%95"><span class="toc-number">3.7.</span> <span class="toc-text">可靠性测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SRE-%E4%B8%AD%E7%9A%84%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B"><span class="toc-number">3.8.</span> <span class="toc-text">SRE 中的软件工程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%89%8D%E7%AB%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="toc-number">3.9.</span> <span class="toc-text">前端负载均衡</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="toc-number">3.10.</span> <span class="toc-text">数据中心负载均衡</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%84%E7%90%86%E8%BF%87%E8%BD%BD"><span class="toc-number">3.11.</span> <span class="toc-text">处理过载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%94%E5%AF%B9%E7%BA%A7%E8%81%94%E6%95%85%E9%9A%9C"><span class="toc-number">3.12.</span> <span class="toc-text">应对级联故障</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%A1%E7%90%86%E5%85%B3%E9%94%AE%E7%8A%B6%E6%80%81%EF%BC%9A%E9%80%9A%E8%BF%87%E5%88%86%E5%B8%83%E5%BC%8F%E5%85%B1%E8%AF%86%E5%AE%9E%E7%8E%B0%E5%8F%AF%E9%9D%A0%E6%80%A7"><span class="toc-number">3.13.</span> <span class="toc-text">管理关键状态：通过分布式共识实现可靠性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-Cron-%E8%BF%9B%E8%A1%8C%E5%88%86%E5%B8%83%E5%BC%8F%E5%91%A8%E6%9C%9F%E8%B0%83%E5%BA%A6"><span class="toc-number">3.14.</span> <span class="toc-text">使用 Cron 进行分布式周期调度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E6%B5%81%E6%B0%B4%E7%BA%BF"><span class="toc-number">3.15.</span> <span class="toc-text">数据处理流水线</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%AE%8C%E6%95%B4%E6%80%A7"><span class="toc-number">3.16.</span> <span class="toc-text">数据完整性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%A7%E8%A7%84%E6%A8%A1%E4%BA%A7%E5%93%81%E7%9A%84%E5%8F%AF%E9%9D%A0%E4%B8%8A%E7%BA%BF"><span class="toc-number">3.17.</span> <span class="toc-text">大规模产品的可靠上线</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9E%E9%A1%BE%E4%B8%8E%E8%87%AA%E6%B5%8B"><span class="toc-number">4.</span> <span class="toc-text">回顾与自测</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SLI%E3%80%81SLO%E3%80%81SLA-%E5%88%86%E5%88%AB%E8%A7%A3%E5%86%B3%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="toc-number">4.1.</span> <span class="toc-text">SLI、SLO、SLA 分别解决什么问题？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%E4%B8%AA%E9%BB%84%E9%87%91%E4%BF%A1%E5%8F%B7%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">4.2.</span> <span class="toc-text">四个黄金信号是什么？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96%E7%9A%84%E4%BB%B7%E5%80%BC%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">4.3.</span> <span class="toc-text">自动化的价值是什么？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%88%91%E6%80%8E%E6%A0%B7%E7%90%86%E8%A7%A3-SRE-%E7%9A%84%E5%B7%A5%E4%BD%9C%EF%BC%9F"><span class="toc-number">4.4.</span> <span class="toc-text">我怎样理解 SRE 的工作？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%8E%E6%A0%B7%E4%BF%9D%E6%8A%A4%E8%BF%87%E8%BD%BD%E4%B8%AD%E7%9A%84%E7%B3%BB%E7%BB%9F%EF%BC%8C%E9%81%BF%E5%85%8D%E7%BA%A7%E8%81%94%E6%95%85%E9%9A%9C%EF%BC%9F"><span class="toc-number">4.5.</span> <span class="toc-text">怎样保护过载中的系统，避免级联故障？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E8%AF%95%E8%A6%81%E8%80%83%E8%99%91%E5%93%AA%E4%BA%9B%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="toc-number">4.6.</span> <span class="toc-text">重试要考虑哪些问题？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%9C%89%E4%B8%89%E4%B8%AA%E5%89%AF%E6%9C%AC%EF%BC%8C%E5%A4%87%E4%BB%BD%E6%AF%8F%E5%A4%A9%E6%88%90%E5%8A%9F%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%AF%AF%E5%88%A0%E5%90%8E%E4%BB%8D%E5%8F%AF%E8%83%BD%E6%97%A0%E6%B3%95%E6%81%A2%E5%A4%8D%EF%BC%9F"><span class="toc-number">4.7.</span> <span class="toc-text">数据有三个副本，备份每天成功，为什么误删后仍可能无法恢复？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%A8%E6%9C%9F%E8%B0%83%E5%BA%A6%E7%9A%84-Leader-%E6%89%A7%E8%A1%8C%E5%88%B0%E4%B8%80%E5%8D%8A%E5%B4%A9%E6%BA%83%E6%80%8E%E4%B9%88%E5%8A%9E%EF%BC%9F"><span class="toc-number">4.8.</span> <span class="toc-text">周期调度的 Leader 执行到一半崩溃怎么办？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B0%E5%8A%9F%E8%83%BD%E9%80%9A%E8%BF%87%E5%8A%9F%E8%83%BD%E5%92%8C%E8%B4%9F%E8%BD%BD%E6%B5%8B%E8%AF%95%EF%BC%8C%E4%B8%8A%E7%BA%BF%E5%89%8D%E8%BF%98%E8%A6%81%E7%A1%AE%E8%AE%A4%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">4.9.</span> <span class="toc-text">新功能通过功能和负载测试，上线前还要确认什么？</span></a></li></ol></li></ol>
+      </div>
+    
+  <div class="content">
+        <div><p>这篇笔记记录我阅读 <a target="_blank" rel="noopener" href="https://sre.google/sre-book/table-of-contents/">《Site Reliability Engineering》</a> 时，对 SRE 原则和实践的理解。每个主题尽量回答三个问题：</p>
+<ul>
+<li><strong>Why：为什么需要它？</strong> 先理解生产环境中遇到了什么问题。</li>
+<li><strong>What：它是什么？</strong> 明确概念、目标和边界。</li>
+<li><strong>How：怎么做？</strong> 把原则落实到工程和日常工作中。</li>
+</ul>
+<p>下面按学习主题整理，记忆点是个人理解与归纳，文末保留自测题，方便回顾。</p>
+<span id="more"></span>
+
+<h2 id="SRE-的整体视角"><a href="#SRE-的整体视角" class="headerlink" title="SRE 的整体视角"></a>SRE 的整体视角</h2><h3 id="SRE-关注哪些工作？"><a href="#SRE-关注哪些工作？" class="headerlink" title="SRE 关注哪些工作？"></a>SRE 关注哪些工作？</h3><p>SRE 用软件工程的方法管理服务可靠性，在产品迭代速度、稳定性和成本之间做出取舍。阅读过程中，我先记住了几个主要工作领域：</p>
+<ol>
+<li><strong>服务水平管理</strong>：根据用户需求定义 SLI 和 SLO，围绕明确的可靠性目标开展工程工作。</li>
+<li><strong>监控</strong>：通过告警、工单和日志，让运行状态能够推动行动。</li>
+<li><strong>应急响应</strong>：提前准备工具和操作文档，减少故障影响，缩短恢复时间。</li>
+<li><strong>变更管理</strong>：逐步灰度，迅速、准确地发现问题，并能够安全回滚。</li>
+<li><strong>需求预测与容量规划</strong>：合理预测增长，定期测试容量和系统极限。</li>
+</ol>
+<p>理解可靠性时，也要区分几个常见时间指标：MTTF 是平均失效前时间，MTBF 是平均故障间隔时间；MTTR 在这里指平均恢复时间。团队使用这些指标时，需要明确起止点和统计口径。</p>
+<h3 id="从-SRE-的视角看-Google-生产环境"><a href="#从-SRE-的视角看-Google-生产环境" class="headerlink" title="从 SRE 的视角看 Google 生产环境"></a>从 SRE 的视角看 Google 生产环境</h3><p>这一部分帮助我建立生产环境的整体图景，主要用作后续章节的背景。</p>
+<p><strong>硬件组织</strong>可以按机器、机架、机架排、集群、数据中心建筑和园区来理解。书中还特意区分了 Machine 与 Server：前者指机器，后者指提供服务的软件。这里的层级来自 Google 的环境，不能直接套成所有云平台的 AZ、Region 层级。参见<a target="_blank" rel="noopener" href="https://sre.google/sre-book/production-environment/">原书的生产环境介绍</a>。</p>
+<p><strong>请求路径</strong>可以用一个简化示意帮助记忆：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">用户 → DNS / 全局流量调度 → 负载均衡 → 前端 / Proxy → RPC 服务 → 存储</span><br></pre></td></tr></table></figure>
+
+<p>沿着这条路径，分别考虑：流量进入哪个数据中心、请求交给哪个实例、依赖怎样被调用、状态保存在哪里。具体系统可以组合不同机制，DNS、L4 和 L7 负载均衡也有各自的职责。</p>
+<h3 id="SRE-原则的主线"><a href="#SRE-原则的主线" class="headerlink" title="SRE 原则的主线"></a>SRE 原则的主线</h3><p><strong>记忆点：安全地提高产品迭代速度，需要把可靠性目标、运行反馈和工程改进联系起来。</strong></p>
+<ul>
+<li><strong>风险与目标</strong>：风险评估 → SLO → 错误预算。</li>
+<li><strong>运行与反馈</strong>：监控 → 发现偏差 → 干预和改进。</li>
+<li><strong>持续演进</strong>：消除 Toil、推进自动化、完善发布工程。</li>
+<li><strong>贯穿原则</strong>：保持简单。</li>
+</ul>
+<h2 id="SRE-的原则"><a href="#SRE-的原则" class="headerlink" title="SRE 的原则"></a>SRE 的原则</h2><h3 id="拥抱风险"><a href="#拥抱风险" class="headerlink" title="拥抱风险"></a>拥抱风险</h3><p><strong>记忆点：管理服务可靠性，很大程度上就是管理风险；可靠性本身也有成本。</strong></p>
+<ol>
+<li><strong>Why：为什么需要管理风险？</strong> 故障会伤害用户，但过度追求可靠性也会增加成本、拖慢迭代。开发和 SRE 如果缺少共同目标，也容易对变更风险产生分歧。</li>
+<li><strong>What：希望达到什么状态？</strong> 根据用户和业务需求，结合成本，确定“足够可靠”的程度，并用 SLO 明确表达。</li>
+<li><strong>How：怎样管理？</strong> 围绕 SLO 安排测试、冗余、容量和发布节奏，并用错误预算协调可靠性投入与产品迭代。</li>
+</ol>
+<p>例如，按请求成功比例定义的 SLO 为 99.9% 时，在约定窗口和统计口径下，允许的不合格请求比例就是 0.1%。错误预算关注的是这部分余量怎样被消耗，以及消耗速度是否需要改变工程决策。</p>
+<h3 id="服务水平目标：SLI、SLO、SLA"><a href="#服务水平目标：SLI、SLO、SLA" class="headerlink" title="服务水平目标：SLI、SLO、SLA"></a>服务水平目标：SLI、SLO、SLA</h3><p><strong>记忆点：先知道用户真正关心什么、怎样衡量，才能有效管理服务。</strong></p>
+<ol>
+<li><p><strong>Why：为什么需要明确服务水平？</strong> 让团队对服务是否健康、哪些问题值得优先处理形成共同判断。</p>
+</li>
+<li><p><strong>What：这三个概念分别是什么？</strong></p>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>解决的问题</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>SLI：服务水平指标</strong></td>
+<td>实际服务水平怎样衡量？</td>
+<td>合格请求中的成功比例、请求延迟分布</td>
+</tr>
+<tr>
+<td><strong>SLO：服务水平目标</strong></td>
+<td>希望指标达到什么水平？</td>
+<td>在约定的 30 天窗口内，请求成功比例至少为 99.9%</td>
+</tr>
+<tr>
+<td><strong>SLA：服务水平协议</strong></td>
+<td>对用户做出什么承诺，未达标有什么后果？</td>
+<td>可用性低于约定目标时，按协议提供服务抵扣</td>
+</tr>
+</tbody></table>
+</li>
+<li><p><strong>How：怎样制定和使用？</strong> 先选择与用户体验相关的少量指标，明确采集位置、统计窗口、聚合方式和排除条件；再设定合理目标，并根据偏差采取行动。SLA 的制定还需要业务和法务参与。</p>
+</li>
+</ol>
+<p>内部 SLO 通常应比对外承诺更严格，给发现和处理问题留出余量。比较时要说清楚方向：可用性目标越高越严格，延迟上限越低越严格。定义与目标留余量的原则参见<a target="_blank" rel="noopener" href="https://sre.google/sre-book/service-level-objectives/">原书的服务水平目标章节</a>。</p>
+<h3 id="消除-Toil：避免重复的手动运维"><a href="#消除-Toil：避免重复的手动运维" class="headerlink" title="消除 Toil：避免重复的手动运维"></a>消除 Toil：避免重复的手动运维</h3><p><strong>记忆点：服务规模增长时，重复运维工作不能无限挤占工程改进时间。</strong></p>
+<ol>
+<li><strong>Why：为什么需要消除 Toil？</strong> 如果重复操作随服务规模同步增长，团队就会越来越忙，却没有时间消除问题。</li>
+<li><strong>What：Toil 是什么？</strong> 它通常具有这些特征：需要人工操作、反复发生、可以自动化、由事件驱动而被动处理、不产生持久改进，并且随服务规模线性增长。</li>
+<li><strong>How：怎样减少？</strong> 留出软件工程和系统工程时间，识别高频、耗时的重复操作，通过工具、流程和系统设计形成持久改进。</li>
+</ol>
+<h3 id="分布式系统的监控"><a href="#分布式系统的监控" class="headerlink" title="分布式系统的监控"></a>分布式系统的监控</h3><p><strong>记忆点：需要立即响应的告警，应指向真实的服务症状或即将发生的问题。</strong></p>
+<ol>
+<li><p><strong>Why：为什么需要监控？</strong> 分析趋势、触发告警、比较版本和实验效果、回顾问题，以及构建仪表盘。</p>
+</li>
+<li><p><strong>What：监控哪些内容？</strong> 白盒监控观察系统内部暴露的指标和状态；黑盒监控从用户视角验证外部行为。服务监控可以先围绕四个黄金信号展开：</p>
+<table>
+<thead>
+<tr>
+<th>黄金信号</th>
+<th>回答的问题</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>延迟 Latency</strong></td>
+<td>请求处理有多慢？</td>
+<td>p50、p99，成功与失败请求的延迟</td>
+</tr>
+<tr>
+<td><strong>流量 Traffic</strong></td>
+<td>系统承受多少需求？</td>
+<td>QPS、bps、CPS、并发会话数</td>
+</tr>
+<tr>
+<td><strong>错误 Errors</strong></td>
+<td>有多少请求没有得到正确结果？</td>
+<td>错误率、超时比例、内容错误</td>
+</tr>
+<tr>
+<td><strong>饱和度 Saturation</strong></td>
+<td>系统距离资源极限还有多远？</td>
+<td>CPU 利用率、队列积压、连接池耗尽、内存余量</td>
+</tr>
+</tbody></table>
+</li>
+<li><p><strong>How：怎样设置？</strong> 关注尾延迟，选择合适的测量与聚合粒度，避免平均值掩盖短时尖峰，并让监控规则保持简单。</p>
+</li>
+</ol>
+<p>其中，饱和度要结合系统瓶颈判断。CPU、内存使用率可以作为线索，但还需要看排队和剩余容量；一些系统在利用率达到 100% 之前就已经明显退化。参见<a target="_blank" rel="noopener" href="https://sre.google/sre-book/monitoring-distributed-systems/#xref_monitoring_golden-signals">原书的四个黄金信号</a>。</p>
+<h3 id="自动化的价值"><a href="#自动化的价值" class="headerlink" title="自动化的价值"></a>自动化的价值</h3><p><strong>记忆点：自动化能够提高一致性，把经过验证的操作能力沉淀到系统中。</strong></p>
+<ol>
+<li><strong>Why：为什么需要自动化？</strong> 提高一致性，形成共享平台，更快地修复问题和执行操作，并节省人工时间。</li>
+<li><strong>What：自动化是什么？</strong> 用软件执行和协调原本由人完成的操作，例如部署、配置、扩缩容和故障恢复。</li>
+<li><strong>How：怎样推进？</strong> 从明确、可重复的操作开始，逐步扩大自动化范围，同时明确失败处理和人工接管方式。</li>
+</ol>
+<h3 id="发布工程"><a href="#发布工程" class="headerlink" title="发布工程"></a>发布工程</h3><p><strong>记忆点：构建并交付软件，需要一套一致、可重复的工程流程。</strong></p>
+<ol>
+<li><strong>Why：为什么需要发布工程？</strong> 让软件从研发到上线的过程受到规范控制，减少环境差异和手动操作带来的不确定性。</li>
+<li><strong>What：发布工程包括什么？</strong> 发布工程师与开发、SRE 一起定义软件交付所需的步骤：源代码管理、构建规则、测试、打包、部署和配置管理。</li>
+<li><strong>How：怎样做？</strong> 提供自助服务，支持高效发布；通过密闭构建控制输入和依赖，并让策略和流程能够被一致执行。</li>
+</ol>
+<h3 id="简洁性"><a href="#简洁性" class="headerlink" title="简洁性"></a>简洁性</h3><p><strong>记忆点：系统越容易理解和预测，越有利于维护可靠性。</strong></p>
+<ol>
+<li><strong>Why：为什么需要简洁性？</strong> 复杂性增加理解、测试、变更和故障定位的难度。</li>
+<li><strong>What：什么是简洁性？</strong> 在满足业务需求的前提下，让代码、模块、接口和运行方式尽量清晰。</li>
+<li><strong>How：怎样保护简洁性？</strong> 删除不再需要的代码和功能，保持 API 精简，划分清楚模块边界，也让发布过程保持简单。</li>
+</ol>
+<p>删除代码的价值在于减少不必要的复杂性，而不能仅用代码行数评价设计。</p>
+<h2 id="SRE-的实践"><a href="#SRE-的实践" class="headerlink" title="SRE 的实践"></a>SRE 的实践</h2><h3 id="基于时间序列数据的实用告警"><a href="#基于时间序列数据的实用告警" class="headerlink" title="基于时间序列数据的实用告警"></a>基于时间序列数据的实用告警</h3><p><strong>记忆点：监控的核心，是把运行状态转化为可以采取行动的依据。</strong></p>
+<ol>
+<li><strong>Why：为什么需要监控告警系统？</strong> 把大量实例的运行情况转化为可查询、可比较、可采取行动的信息，帮助发现问题、定位原因，同时控制监控自身的维护成本。</li>
+<li><strong>What：它处理什么数据？</strong> 数值的含义，例如 Gauge、Counter；数值的归属，即指标名与标签集合；数值的历史，即时间戳与对应的值。</li>
+<li><strong>How：数据怎样推动行动？</strong> 埋点产生指标 → 暴露并采集 → 时间序列数据库存储 → 查询与计算 → 告警规则 → 人员行动。</li>
+</ol>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">运行状态 → 数值 → 判断 → 行动</span><br></pre></td></tr></table></figure>
+
+<h3 id="On-Call：值班"><a href="#On-Call：值班" class="headerlink" title="On-Call：值班"></a>On-Call：值班</h3><p><strong>记忆点：值班需要及时响应，也需要能够长期持续。</strong></p>
+<ol>
+<li><strong>Why：为什么需要值班？</strong> 当生产问题需要人工判断和处理时，确保有人及时响应，同时避免持续救火耗尽团队的工程能力。</li>
+<li><strong>What：值班是什么？</strong> 在约定轮值期间承担生产问题的第一响应职责：接收告警、判断影响、推动恢复，并在需要时寻求支援或升级处理。</li>
+<li><strong>How：怎样让值班有效？</strong> 均衡轮班和运行负荷，关注告警质量、事件数量、交接和补偿，并持续改进造成重复打扰的问题。</li>
+</ol>
+<h3 id="应急响应"><a href="#应急响应" class="headerlink" title="应急响应"></a>应急响应</h3><p><strong>记忆点：故障无法完全避免，应急能力需要提前准备。</strong></p>
+<ol>
+<li><strong>Why：为什么需要应急响应？</strong> 紧急情况下可能同时出现工具失效、信息不足和人员紧张。提前准备可以降低影响，帮助尽快恢复服务。</li>
+<li><strong>What：应急响应是什么？</strong> 一套应对突发故障的能力，包括事前准备、故障中的止损与恢复，以及事后的改进。</li>
+<li><strong>How：怎样做好？</strong> 事前准备工具、权限、文档并演练；事中判断影响、控制变更、止损和恢复；事后记录事实并落实改进。</li>
+</ol>
+<h3 id="事件管理"><a href="#事件管理" class="headerlink" title="事件管理"></a>事件管理</h3><p><strong>记忆点：多人处理故障时，需要清晰的职责与共享的信息。</strong></p>
+<ol>
+<li><strong>Why：为什么需要事件管理？</strong> 多人、多团队参与时，容易出现重复排查、操作冲突、信息断层，以及技术负责人被沟通事务拖住的问题。</li>
+<li><strong>What：事件管理是什么？</strong> 故障处理期间的组织协作机制，明确谁指挥、谁操作、谁沟通、谁保障后续工作，以及如何共享信息。</li>
+<li><strong>How：怎样管理？</strong> 及早宣布事件，建立统一沟通渠道，明确职责、协调操作、共享状态，持续调整响应规模，并做好交接。</li>
+</ol>
+<h3 id="事后文化：从失败中学习"><a href="#事后文化：从失败中学习" class="headerlink" title="事后文化：从失败中学习"></a>事后文化：从失败中学习</h3><p><strong>记忆点：复盘需要形成可以减少故障复发概率或影响的改进。</strong></p>
+<ol>
+<li><strong>Why：为什么需要复盘？</strong> 服务恢复后，如果没有系统学习和改进，同类故障就可能反复发生。</li>
+<li><strong>What：复盘是什么？</strong> 一份可以审阅和共享的书面记录：发生了什么、造成什么影响、如何处理、有哪些促成原因，以及后续怎样改进。</li>
+<li><strong>How：怎样做好？</strong> 提前确定复盘条件 → 还原事实 → 无责分析原因 → 制定改进措施 → 审阅与分享 → 落实改进。</li>
+</ol>
+<h3 id="故障跟踪"><a href="#故障跟踪" class="headerlink" title="故障跟踪"></a>故障跟踪</h3><p><strong>记忆点：有已知基线，并且能够跟踪变化，才能判断可靠性是否真的提高。</strong></p>
+<ol>
+<li><strong>Why：为什么需要持续跟踪？</strong> 单次故障处理完后，还需要看长期趋势：哪些问题反复发生，哪些服务最消耗值班精力，改进有没有效果。</li>
+<li><strong>What：跟踪哪些信息？</strong> 事件时间、影响、处理过程、原因分类、采取的操作，以及误报等信息。</li>
+<li><strong>How：怎样组织？</strong><ul>
+<li><strong>归并</strong>：一次网络故障可能触发几十条服务告警，要把它们关联到同一个事件，分别统计告警数和事件数。</li>
+<li><strong>记录与分类</strong>：补充 <code>cause:network</code>、<code>action:rollback</code> 等标签与注释。</li>
+<li><strong>横向和长期分析</strong>：比较服务、团队与时间段，识别共同的基础设施问题，并验证改进效果。</li>
+</ul>
+</li>
+</ol>
+<h3 id="可靠性测试"><a href="#可靠性测试" class="headerlink" title="可靠性测试"></a>可靠性测试</h3><p><strong>记忆点：用测试减少变更的不确定性，也验证系统失效和恢复时的行为。</strong></p>
+<ol>
+<li><p><strong>Why：为什么需要测试？</strong> 尽早发现问题，减少变更带来的风险，并验证系统能否按预期运行和恢复。</p>
+</li>
+<li><p><strong>What：可以测试哪些方面？</strong> 下面这些类型从不同角度检查系统，彼此可以交叉：</p>
+<table>
+<thead>
+<tr>
+<th>测试类型</th>
+<th>主要检查什么？</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>单元测试</td>
+<td>函数或模块的行为是否正确</td>
+</tr>
+<tr>
+<td>集成测试</td>
+<td>多个组件之间的交互是否正确</td>
+</tr>
+<tr>
+<td>系统测试</td>
+<td>完整系统是否满足预期行为</td>
+</tr>
+<tr>
+<td>冒烟测试</td>
+<td>最基本的关键功能是否可用</td>
+</tr>
+<tr>
+<td>性能与负载测试</td>
+<td>在不同压力下，吞吐、延迟和资源消耗怎样变化</td>
+</tr>
+<tr>
+<td>回归测试</td>
+<td>变更是否破坏已有行为</td>
+</tr>
+<tr>
+<td>模糊测试</td>
+<td>异常、边界或生成的输入是否触发缺陷</td>
+</tr>
+<tr>
+<td>故障注入测试</td>
+<td>依赖失效、网络异常等情况下，系统怎样表现</td>
+</tr>
+<tr>
+<td>灾难恢复测试</td>
+<td>故障后能否恢复数据与服务</td>
+</tr>
+<tr>
+<td>稳定性测试</td>
+<td>持续运行一段时间后是否仍然正常</td>
+</tr>
+<tr>
+<td>兼容性测试</td>
+<td>不同版本或配置能否按预期协同工作</td>
+</tr>
+<tr>
+<td>黑盒探测</td>
+<td>从外部调用方视角看，服务是否可用且结果正确</td>
+</tr>
+</tbody></table>
+</li>
+<li><p><strong>How：怎样落到流程中？</strong> 按风险确定优先级，设计有明确判定条件的用例，自动化执行，并验证真实部署。生产变更还需要结合金丝雀发布和监控，逐步扩大影响范围。</p>
+</li>
+</ol>
+<h3 id="SRE-中的软件工程"><a href="#SRE-中的软件工程" class="headerlink" title="SRE 中的软件工程"></a>SRE 中的软件工程</h3><p><strong>记忆点：把生产问题转化为有明确用户、能够持续维护的软件产品。</strong></p>
+<ol>
+<li><strong>Why：为什么 SRE 需要开展软件工程？</strong> 通过软件和自动化减少重复劳动、提高可靠性，让服务规模增长时，所需人力不必同比增长。SRE 对生产复杂性的直接经验，也有助于选对工具要解决的问题。</li>
+<li><strong>What：具体做什么？</strong> 围绕生产需求开发内部软件，例如发布机制、监控系统和开发工具，并提供需求、设计、测试、发布和持续维护机制。</li>
+<li><strong>How：怎样开展？</strong> 选对问题并明确需求；先做可用版本，再持续迭代；把推广和用户支持作为开发的一部分；按正式软件产品的标准保证质量，并保持与生产环境的联系。</li>
+</ol>
+<h3 id="前端负载均衡"><a href="#前端负载均衡" class="headerlink" title="前端负载均衡"></a>前端负载均衡</h3><p><strong>记忆点：入口流量分配需要同时考虑可用性、延迟、吞吐和资源利用率。</strong></p>
+<ol>
+<li><strong>Why：为什么需要前端负载均衡？</strong> 单机存在容量限制和单点风险，单个数据中心也无法兼顾全球用户的访问体验。</li>
+<li><strong>What：它是什么？</strong> 在服务入口，根据用户位置、业务需求、容量和健康状态，将外部流量分配到合适的数据中心及服务实例。</li>
+<li><strong>How：怎样分配？</strong> 可以拆成三个问题：<ul>
+<li><strong>选择哪个入口或数据中心？</strong> DNS 可以返回合适的 A&#x2F;AAAA 地址；选择时要考虑用户位置、网络延迟、容量、健康状态，以及递归解析器和缓存带来的限制。</li>
+<li><strong>选择 VIP 背后的哪台实例？</strong> 根据负载或哈希选择后端，并配合连接跟踪保持连接亲和性；后端集合变化时，尽量减少对已有连接的影响。</li>
+<li><strong>怎样把包送到实例？</strong> 可以采用 NAT、修改二层目标 MAC、GRE 等隧道封装。具体方案要考虑回包路径、连接状态、二层可达性、封装开销和 MTU。</li>
+</ul>
+</li>
+</ol>
+<h3 id="数据中心负载均衡"><a href="#数据中心负载均衡" class="headerlink" title="数据中心负载均衡"></a>数据中心负载均衡</h3><p><strong>记忆点：调用方需要从一组后端中，为请求选择合适的处理者。</strong></p>
+<ol>
+<li><strong>Why：为什么需要负载均衡？</strong> 避免部分实例先过载、其他容量却闲置，同时控制连接成本，支持安全上下线。</li>
+<li><strong>What：它是什么？</strong> 数据中心内部，调用方怎样选择并使用一组后端处理请求。</li>
+<li><strong>How：怎样做？</strong> 通过健康与生命周期管理确定接流量资格；通过子集化控制连接规模；通过请求调度策略按实际能力分摊负载。</li>
+</ol>
+<p>当调用方很多、后端很多、连接需要长期保持时，连接数量和维护成本都需要单独考虑，TLS 连接还涉及握手等开销。</p>
+<h3 id="处理过载"><a href="#处理过载" class="headerlink" title="处理过载"></a>处理过载</h3><p><strong>记忆点：超过容量时，系统仍应稳定处理自己承受得住的那部分请求。</strong></p>
+<ol>
+<li><strong>Why：为什么需要过载保护？</strong> 资源有限，流量突增、请求成本变化、负载分配不均都可能导致过载。如果任由请求堆积和重试放大，可能出现延迟上升、资源耗尽和进程崩溃，进而引发级联故障。</li>
+<li><strong>What：过载保护是什么？</strong> 根据可用资源、客户配额和请求重要性控制接受的工作量；必要时降低服务质量、拒绝部分请求，并约束客户端继续发送和重试的行为。</li>
+<li><strong>How：怎样实现？</strong><ul>
+<li><strong>判断过载</strong>：结合请求量、CPU、内存、队列和并发数，识别实际瓶颈。</li>
+<li><strong>资源公平</strong>：按客户设置配额，避免一个客户挤占其他客户的资源。</li>
+<li><strong>保留重要请求</strong>：资源不足时，按请求重要性决定接收和丢弃顺序。</li>
+<li><strong>减少工作量</strong>：通过降级、连接池和批处理，降低请求与连接维护成本。</li>
+<li><strong>提前拒绝</strong>：如果服务端拒绝请求本身也很昂贵，客户端可以根据反馈在本地限制发送。</li>
+<li><strong>约束重试</strong>：只对适合重试的错误进行受控重试；大面积过载时，继续重试可能让恢复更困难。</li>
+</ul>
+</li>
+</ol>
+<p>客户端限流控制发送速率或工作量；熔断则根据依赖的健康状态暂时阻断调用。两者可以配合使用。</p>
+<h3 id="应对级联故障"><a href="#应对级联故障" class="headerlink" title="应对级联故障"></a>应对级联故障</h3><p><strong>记忆点：要知道系统的临界点在哪里，以及越过临界点之后会怎样。</strong></p>
+<ol>
+<li><p><strong>Why：为什么需要防范级联故障？</strong> 组件之间相互依赖、共享资源，局部故障可能增加其他组件的负载，或者降低整体处理能力。</p>
+</li>
+<li><p><strong>What：什么是级联故障？</strong> 一种典型的正反馈过程是：</p>
+ <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">部分实例失效 → 可用容量减少 → 剩余实例承担更多负载</span><br><span class="line">     ↑                                  ↓</span><br><span class="line">     └──────────── 更多实例失效 ─────────┘</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>How：怎样防止和应对？</strong> 隔离故障域，限制队列与并发数，设置处理时间上限，控制重试；测试超过极限后的行为，也测试恢复过程，检查冷缓存和批量重启是否带来额外负载。发生故障时，先通过限流、降级、熔断或有效扩容让系统稳定下来，再继续排查。</p>
+</li>
+</ol>
+<h3 id="管理关键状态：通过分布式共识实现可靠性"><a href="#管理关键状态：通过分布式共识实现可靠性" class="headerlink" title="管理关键状态：通过分布式共识实现可靠性"></a>管理关键状态：通过分布式共识实现可靠性</h3><p><strong>记忆点：识别哪些关键状态需要共识，理解仅靠心跳判断存活时的边界。</strong></p>
+<ol>
+<li><strong>Why：为什么需要分布式共识？</strong> 服务和状态复制到多个节点后，节点仍会崩溃，网络仍会延迟、丢包和分区。多个节点可能因此对“谁是主节点”“配置是什么”等关键问题产生不同认知。</li>
+<li><strong>What：分布式共识是什么？</strong> 让一组通过不可靠网络通信的进程，按照明确协议对决定达成一致。</li>
+<li><strong>How：怎样使用？</strong> 识别必须一致的关键状态；优先使用成熟的 etcd、ZooKeeper 等系统；配置足够副本并分散故障域；结合领导者、批处理、流水线和分片等方式平衡性能；部署时考虑副本位置、客户端距离、跨地域延迟和故障范围；运行时观察领导者与提交进展。</li>
+</ol>
+<h3 id="使用-Cron-进行分布式周期调度"><a href="#使用-Cron-进行分布式周期调度" class="headerlink" title="使用 Cron 进行分布式周期调度"></a>使用 Cron 进行分布式周期调度</h3><p><strong>记忆点：调度器的高可用与作业启动的正确性，需要分别解决。</strong></p>
+<ol>
+<li><strong>Why：为什么分布式调度难做？</strong> 单机 Cron 故障可能导致漏启动，重新调度又可能造成延迟和状态丢失。增加备用调度器后，还必须防止接管时重复启动。</li>
+<li><strong>What：分布式周期调度是什么？</strong> 多副本调度服务保存作业配置、计划启动时间和启动状态；由 Leader 请求执行系统启动作业，其他副本同步状态，并在故障后接管。</li>
+<li><strong>How：怎样实现？</strong><ul>
+<li><strong>谁接管？</strong> 多副本热备，通过共识选择 Leader。</li>
+<li><strong>怎样区分轮次？</strong> 使用“作业标识＋计划启动时间”标识一次计划启动。</li>
+<li><strong>启动到一半崩溃怎么办？</strong> 新 Leader 检查未完成记录；依靠外部操作的幂等性或状态查询，补齐尚未完成的部分。</li>
+<li><strong>还要检查什么？</strong> 防止新旧 Leader 同时操作，恢复持久状态，并处理大量作业集中启动时的容量问题。</li>
+</ul>
+</li>
+</ol>
+<p>共识能帮助管理调度状态；外部执行已经发生到哪一步、重复请求是否安全，也必须有明确机制。</p>
+<h3 id="数据处理流水线"><a href="#数据处理流水线" class="headerlink" title="数据处理流水线"></a>数据处理流水线</h3><p><strong>记忆点：任务状态与执行进程分离，计算可以重做，结果提交必须受控。</strong></p>
+<ol>
+<li><p><strong>Why：为什么需要 Workflow 这样的系统？</strong> 随着数据量和时效要求提高，以“定时启动、整轮完成”为单位的流水线可能出现调度积压、长尾阻塞、失败后大量重算，以及共享资源冲击。</p>
+</li>
+<li><p><strong>What：书中这套 Workflow 系统是什么？</strong> 管理任务如何沿流水线推进的协调系统，主要角色包括：</p>
+<table>
+<thead>
+<tr>
+<th>角色</th>
+<th>职责</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Task Master：任务主控</strong></td>
+<td>保存任务状态、租约、配置版本和数据引用，检查并提交状态变更</td>
+</tr>
+<tr>
+<td><strong>Worker：工作进程</strong></td>
+<td>领取任务、读取数据、执行计算、写出结果，再向主控提交</td>
+</tr>
+<tr>
+<td><strong>Controller：控制器，可选</strong></td>
+<td>管理扩缩容、快照、暂停、回滚和故障转移等操作</td>
+</tr>
+</tbody></table>
+</li>
+<li><p><strong>How：怎样保证可靠性和正确性？</strong> 将任务状态与执行进程分离，允许失败后重新计算，严格控制结果提交，并为跨集群恢复保留明确依据。</p>
+</li>
+</ol>
+<h3 id="数据完整性"><a href="#数据完整性" class="headerlink" title="数据完整性"></a>数据完整性</h3><p><strong>记忆点：恢复能力需要通过持续演练来证明。</strong></p>
+<ol>
+<li><strong>Why：为什么需要数据完整性保障？</strong> 程序错误、误操作和基础设施故障都可能造成数据丢失或损坏，多副本也可能传播错误。</li>
+<li><strong>What：希望达到什么状态？</strong> 保证数据正确、完整，并能在业务允许的时间和数据损失范围内恢复。</li>
+<li><strong>How：怎样做？</strong> 通过软删除、分层备份和故障隔离保留恢复机会；通过完整性检查尽早发现问题；持续执行端到端恢复演练，验证数据与应用都能恢复，并测量耗时和数据损失范围。</li>
+</ol>
+<h3 id="大规模产品的可靠上线"><a href="#大规模产品的可靠上线" class="headerlink" title="大规模产品的可靠上线"></a>大规模产品的可靠上线</h3><p><strong>记忆点：开发完成、测试通过之后，还需要验证上线准备与故障处置能力。</strong></p>
+<ol>
+<li><strong>Why：为什么需要专门关注上线？</strong> 上线涉及开发、SRE、依赖服务等多个团队，容易遗漏容量准备、配置顺序、职责和协作方式。</li>
+<li><strong>What：什么是可靠上线？</strong> 上线前，服务和依赖已经准备好；上线中，影响范围逐步扩大，效果能够被观察；出现问题时，能够及时停止、关闭功能或回滚。各团队知道自己负责什么，以及怎样配合。</li>
+<li><strong>How：怎样落实？</strong> 上线前使用检查清单并制定实施计划；上线中逐步开放、验证指标，明确继续或停止的条件；上线后学习并改进清单与流程。</li>
+</ol>
+<h2 id="回顾与自测"><a href="#回顾与自测" class="headerlink" title="回顾与自测"></a>回顾与自测</h2><h3 id="SLI、SLO、SLA-分别解决什么问题？"><a href="#SLI、SLO、SLA-分别解决什么问题？" class="headerlink" title="SLI、SLO、SLA 分别解决什么问题？"></a>SLI、SLO、SLA 分别解决什么问题？</h3><ul>
+<li><strong>SLI：观测指标</strong>，说明怎样衡量实际服务水平。</li>
+<li><strong>SLO：目标</strong>，说明指标在什么窗口、口径下应达到什么水平。</li>
+<li><strong>SLA：协议与承诺</strong>，说明约定目标，以及未达标的后果。</li>
+</ul>
+<h3 id="四个黄金信号是什么？"><a href="#四个黄金信号是什么？" class="headerlink" title="四个黄金信号是什么？"></a>四个黄金信号是什么？</h3><p><strong>延迟、流量、错误、饱和度。</strong> 记住 p99、QPS、错误率、CPU 使用率等例子之后，还要能解释它们分别反映什么，以及是否覆盖了当前系统的瓶颈。</p>
+<h3 id="自动化的价值是什么？"><a href="#自动化的价值是什么？" class="headerlink" title="自动化的价值是什么？"></a>自动化的价值是什么？</h3><p>提高一致性，减少重复劳动，加快操作和恢复，把经验沉淀成可重复执行的能力。实现时也要控制自动化系统自身的复杂性。</p>
+<h3 id="我怎样理解-SRE-的工作？"><a href="#我怎样理解-SRE-的工作？" class="headerlink" title="我怎样理解 SRE 的工作？"></a>我怎样理解 SRE 的工作？</h3><p>以用户需要的可靠性为目标，通过工程方法持续改进系统，在迭代速度、稳定性与成本之间取得平衡。</p>
+<h3 id="怎样保护过载中的系统，避免级联故障？"><a href="#怎样保护过载中的系统，避免级联故障？" class="headerlink" title="怎样保护过载中的系统，避免级联故障？"></a>怎样保护过载中的系统，避免级联故障？</h3><p>限流、降级、熔断，限制队列与并发，限制处理时间，并控制重试。需要同时验证失效过程和恢复过程，避免恢复操作带来新的冲击。</p>
+<h3 id="重试要考虑哪些问题？"><a href="#重试要考虑哪些问题？" class="headerlink" title="重试要考虑哪些问题？"></a>重试要考虑哪些问题？</h3><ul>
+<li>使用带随机抖动的指数退避。</li>
+<li>限制每个请求的重试次数，并考虑整个进程的重试预算。</li>
+<li>选择合适的一层负责重试，避免多层重试相乘放大请求。</li>
+<li>区分错误类型和状态码，只重试可能恢复且可以安全重试的操作。</li>
+<li>检查操作的幂等性，以及剩余时间是否允许再次尝试。</li>
+<li>过载时结合降级或停止重试，避免增加系统压力。</li>
+</ul>
+<h3 id="数据有三个副本，备份每天成功，为什么误删后仍可能无法恢复？"><a href="#数据有三个副本，备份每天成功，为什么误删后仍可能无法恢复？" class="headerlink" title="数据有三个副本，备份每天成功，为什么误删后仍可能无法恢复？"></a>数据有三个副本，备份每天成功，为什么误删后仍可能无法恢复？</h3><p>误删可能已经传播到全部副本；备份也可能包含错误、缺少必要数据，或者虽然保存成功，恢复过程却无法正确完成、耗时过长。</p>
+<p>证明恢复能力，需要实际执行端到端恢复演练，检查恢复后的数据与应用是否正确可用，并测量恢复耗时和数据损失范围。</p>
+<h3 id="周期调度的-Leader-执行到一半崩溃怎么办？"><a href="#周期调度的-Leader-执行到一半崩溃怎么办？" class="headerlink" title="周期调度的 Leader 执行到一半崩溃怎么办？"></a>周期调度的 Leader 执行到一半崩溃怎么办？</h3><p>接管者需要知道执行状态，或者能够安全地重试。为每轮启动提供明确标识，持久记录进度，并让外部操作支持幂等或状态查询。</p>
+<h3 id="新功能通过功能和负载测试，上线前还要确认什么？"><a href="#新功能通过功能和负载测试，上线前还要确认什么？" class="headerlink" title="新功能通过功能和负载测试，上线前还要确认什么？"></a>新功能通过功能和负载测试，上线前还要确认什么？</h3><p>使用检查清单确认对已有服务和上下游的影响、容量与依赖准备、负责人、灰度步骤、实施计划、观察指标、停止条件和回滚方案。每一步扩大影响范围前，都要根据实际运行结果判断是否继续。</p>
+</div>
+        
+          <div class="post-copyright">
+                  <div class="copyright-item">
+                      <span> 作者: Zhe-MingC</span>
+                  </div>
+                  <div class="copyright-item">
+                      <span> 链接: <a href="https://zhe-mingc.github.io/2026/10/31/google-sre-reading-notes/">https://zhe-mingc.github.io/2026/10/31/google-sre-reading-notes/</a></span>
+                  </div>
+                  <div class="copyright-item">
+                      <span> 声明: 本博客所有文章除特别声明外，均采用许可协议 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> 转载请注明出处！</span>
+                  </div>
+          </div>
+        
+  </div>
+
+  <div class="share-reward">
+    <div class="share">
+        
+<div class="social-share" data-sites="facebook,twitter,wechat,weibo,qq"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css">
+<script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script>
+
+
+      </div>
+        <div class="reward">
+          
+        </div>
+    </div>
+    
+    <div class="post_tags">
+      
+        <i class="fas fa-tag"></i> <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" class="tag">读书笔记</a>
+      
+        <i class="fas fa-tag"></i> <a href="/tags/SRE/" class="tag">SRE</a>
+      
+        <i class="fas fa-tag"></i> <a href="/tags/%E5%8F%AF%E9%9D%A0%E6%80%A7/" class="tag">可靠性</a>
+      
+    </div>
+    <div class="post-nav">
+      
+      
+        <div class="post-nav-next post-nav-item">
+            <a href="/2026/10/29/dbms-relational-model-sql-basics/" >数据库学习笔记<i class="fa fa-chevron-right"></i></a>
+        </div>
+      
+    </div>
+      
+
+
+
+
+</article>
+
+    
+<a id="gotop" href="javascript:" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    
+
+
+
+
+
+
+    
+<div id="bottom-outer">
+    <div id="bottom-inner">
+        © 2025–2026 <i class="fa fa-heart" id="heart"></i> Zhe-MingC
+        <br>
+        Powered by 
+        <a target="_blank" rel="noopener" href="http://hexo.io">hexo</a> | Theme is <a target="_blank" rel="noopener" href="https://github.com/a2396837/hexo-theme-blank/">dewjo</a>
+        
+          <div class="icp-info">
+            
+          <a href="" target="_blank"> </a>
+        </div>
+        
+    </div>  
+  </div>
+  
+<script src="https://cdn.jsdelivr.net/npm/layui-src@2.5.5/dist/layui.min.js"></script>
+
+
+
+  
+    <script src="/js/script.js"></script>
+  
+    <script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script>
+  
+
+ 
+
+  <script src="/js/local-search.js"></script>
+<script type="text/javascript">      
+  var search_path = "search.xml";
+if (search_path.length == 0) {
+  search_path = "search.xml";
+}
+var path = "/" + search_path;
+  searchFunc(path, 'local-search-input', 'local-search-result');
+</script>
+  
+
+
+
+
+  <script>
+    var images = $('img').not('.nav-logo img').not('.card img').not($('a>img')).not('.reward-content img')
+    images.each(function (i, o) {
+      var lazyloadSrc = $(o).attr('data-src') ? $(o).attr('data-src') : $(o).attr('src')
+      $(o).wrap(`<a href="${lazyloadSrc}" data-fancybox="group" data-caption="${$(o).attr('alt')}" class="fancybox"></a>`)
+    })
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script>
+  <script>
+        $().fancybox({
+      selector: '[data-fancybox]',
+      loop: true,
+      transitionEffect: 'slide',
+      protect: true,
+      buttons: ['slideShow', 'fullScreen', 'thumbs', 'close']
+    })
+  </script>   
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module" defer></script>
+  
+
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js"></script>
+<script>
+!function (e, t, a) {
+  var initCopyCode = function(){
+    var copyHtml = '';
+    copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+    copyHtml += '  <i class="fa fa-clipboard"></i><span>复制</span>';
+    copyHtml += '</button>';
+    $(".highlight .code pre").before(copyHtml);
+    new ClipboardJS('.btn-copy', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+  }
+  initCopyCode();
+}(window, document);
+</script>  
+  
+
+<script>
+  var btntop = $('#gotop');
+  btntop.on('click', function (e) {
+    e.preventDefault();
+    $('html, body').animate({ scrollTop: 0 }, '300');
+  });
+
+  var $table = $('.content table').not($('figure.highlight > table'))
+$table.each(function () {
+  $(this).wrap('<div class="table-wrap"></div>')
+})
+</script>
+
+
+</html>

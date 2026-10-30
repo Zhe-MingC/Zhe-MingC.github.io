@@ -10,7 +10,22 @@
   <rights>All rights reserved 2026, Zhe-MingC</rights>
   <subtitle>聚焦后端/DPDK/Linux/网络编程/云原生</subtitle>
   <title>Tim Chen的技术成长记录</title>
-  <updated>2026-10-29T16:01:11.780Z</updated>
+  <updated>2026-10-30T16:48:23.418Z</updated>
+  <entry>
+    <author>
+      <name>Zhe-MingC</name>
+    </author>
+    <category term="SRE" scheme="https://zhe-mingc.github.io/categories/SRE/"/>
+    <category term="读书笔记" scheme="https://zhe-mingc.github.io/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+    <category term="SRE" scheme="https://zhe-mingc.github.io/tags/SRE/"/>
+    <category term="可靠性" scheme="https://zhe-mingc.github.io/tags/%E5%8F%AF%E9%9D%A0%E6%80%A7/"/>
+    <id>https://zhe-mingc.github.io/2026/10/31/google-sre-reading-notes/</id>
+    <link href="https://zhe-mingc.github.io/2026/10/31/google-sre-reading-notes/"/>
+    <published>2026-10-30T16:00:00.000Z</published>
+    <summary>用 Why、What、How 整理 Google SRE 的原则与实践，涵盖服务水平目标、监控告警、应急响应、负载均衡、过载保护、分布式共识与数据完整性。</summary>
+    <title>Google SRE 学习笔记</title>
+    <updated>2026-10-30T16:48:23.418Z</updated>
+  </entry>
   <entry>
     <author>
       <name>Zhe-MingC</name>
